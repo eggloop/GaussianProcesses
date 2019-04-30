@@ -1,0 +1,16 @@
+.classpath
+.project
+*.class
+*/build/**/*
+*/build/*
+*/bin/*
+.idea/
+*/out/*
+.idea/*
+*.project
+out/*
+*.asv
+*/.idea/*
+.gradle/*
+.gradle/
+gradle/
