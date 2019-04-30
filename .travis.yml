@@ -2,3 +2,11 @@ language: java
 install: true
 before_install:
   - chmod +x gradlew
+jobs:
+  include:
+    - stage: "Build"                # naming the Tests stage
+      name: "Unit Tests"            # names the first Tests stage job
+      script: gradlew build
+    - stage: "Test"                # naming the Tests stage
+      name: "Unit Tests"            # names the first Tests stage job
+      script: gradlew test
