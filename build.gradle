@@ -1,10 +1,10 @@
 plugins {
     id 'java-library'
+    id 'jacoco'
 }
 group 'eggloop'
 version 'beta'
 
-apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -12,10 +12,14 @@ repositories {
     jcenter()
 }
 
+test {
+    useJUnitPlatform()
+}
 dependencies {
     api 'org.apache.commons:commons-math3:3.6.1'
     implementation  'org.jblas:jblas:1.2.4'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
 jacocoTestReport {
