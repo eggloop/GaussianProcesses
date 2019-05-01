@@ -4,19 +4,14 @@ env:
   global:
     - CODECOV_TOKEN=:979ee503-4267-430a-9cb5-63457d94fa38
 install: true
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 before_install:
   - chmod +x gradlew
-jobs:
-  include:
-    - stage: "Build"                # naming the Tests stage
-      name: "Main"            # names the first Tests stage job
-      script: ./gradlew build
-    - stage: "Test"                # naming the Tests stage
-      name: "Unit Tests"            # names the first Tests stage job
-      script: ./gradlew test
-test:
-  post:
-    - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
-    - bash <(curl -s https://codecov.io/bash)
 after_success:
   - bash <(curl -s https://codecov.io/bash)
