@@ -1,9 +1,10 @@
 plugins {
     id 'java-library'
 }
-
 group 'eggloop'
 version 'beta'
+
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -15,5 +16,13 @@ dependencies {
     api 'org.apache.commons:commons-math3:3.6.1'
     implementation  'org.jblas:jblas:1.2.4'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
-
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport

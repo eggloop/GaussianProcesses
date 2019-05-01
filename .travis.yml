@@ -1,4 +1,8 @@
 language: java
+sudo: false
+env:
+  global:
+    - CODECOV_TOKEN=:979ee503-4267-430a-9cb5-63457d94fa38
 install: true
 before_install:
   - chmod +x gradlew
@@ -10,3 +14,7 @@ jobs:
     - stage: "Test"                # naming the Tests stage
       name: "Unit Tests"            # names the first Tests stage job
       script: ./gradlew test
+test:
+  post:
+    - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
+    - bash <(curl -s https://codecov.io/bash)
