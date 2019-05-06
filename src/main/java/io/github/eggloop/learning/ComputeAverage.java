@@ -2,9 +2,9 @@ package io.github.eggloop.learning;
 
 import io.github.eggloop.expr.Context;
 import io.github.eggloop.expr.Variable;
-import io.github.eggloop.gpoptimisation.gpoptim.GPOptimisation;
-import io.github.eggloop.gpoptimisation.gpoptim.GpoOptions;
-import io.github.eggloop.gpoptimisation.gpoptim.GpoResult;
+import io.github.eggloop.gpoptim.GPOptimisation;
+import io.github.eggloop.gpoptim.GpoOptions;
+import io.github.eggloop.gpoptim.GpoResult;
 import io.github.eggloop.mitl.MiTL;
 import io.github.eggloop.mitl.MitlPropertiesList;
 import io.github.eggloop.model.Trajectory;
