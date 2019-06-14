@@ -11,3 +11,5 @@
 out/*
 *.asv
 */.idea/*
+build/
+.gradle/
