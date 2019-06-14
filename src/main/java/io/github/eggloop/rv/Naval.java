@@ -1,70 +1,60 @@
-package io.github.eggloop.learning;
+package io.github.eggloop.rv;
 
+import io.github.eggloop.learning.GeneticPopulation;
+import io.github.eggloop.learning.Learning2;
+import io.github.eggloop.learning.LoggerFactory;
+import io.github.eggloop.model.Trajectories;
+import io.github.eggloop.model.TrajectoriesFactory;
 import io.github.eggloop.simhya.simhya.matlab.genetic.Formula;
 import io.github.eggloop.simhya.simhya.matlab.genetic.FormulaPopulation;
 import io.github.eggloop.simhya.simhya.matlab.genetic.GeneticOptions;
-import io.github.eggloop.utils.data.DataSetSplit;
-import io.github.eggloop.utils.data.TrajectoryMultiReconstruction;
-import io.github.eggloop.utils.data.TrajectoryMultiReconstructionCV;
+import io.github.eggloop.utils.files.FilePathUtility;
 import io.github.eggloop.utils.files.Utils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ExampleLearning {
-    private static final Logger LOGGER = LoggerFactory.get();
-    private static final UnaryOperator<String> FILE_PATH = Utils.getFilePath(Learning.class);
-    private static final BiFunction<double[], double[], Double> DISCRIMINATION_FUNCTION = (x, y) -> (x[0] - y[0]) / (Math.abs(x[1] + y[1]));
-    private static double[] ds2Labels = Utils.readVectorFromFile(FILE_PATH.apply("data/navalLabels"));
-    private static double[] ds2Times = Utils.readVectorFromFile(FILE_PATH.apply("data/navalTimes"));
-    private static double[][][] ds2SpatialValues = Utils.readMatrixMultiFromFile(ds2Times.length, FILE_PATH.apply("data/navalData"));
-    private static Learning learning;
+public class Naval {
+
+    private static final Logger                                 LOGGER                  = LoggerFactory.get();
+    private static final FilePathUtility                        FILE_PATH               = Utils.getPath(Naval.class);
+    private static final BiFunction<double[], double[], Double> DISCRIMINATION_FUNCTION = (x, y) -> (x[0] - y[0]) / Math.abs(x[1] + y[1]);
+    private static       Learning2                              learning;
 
     public static void main(String[] args) throws InterruptedException {
         LOGGER.setLevel(Level.FINE);
-        learning = new Learning(LOGGER, DISCRIMINATION_FUNCTION);
+        learning = new Learning2(LOGGER, DISCRIMINATION_FUNCTION);
         Random random = new Random();
-        learn(new Random(), LOGGER);
-//        learnCV(new Random(), LOGGER);
+        String[] variableNames = { "x", "y" };
+        String timePath = FILE_PATH.getPath("data/navalTimes");
+        String labelPath = FILE_PATH.getPath("data/navalLabels");
+        String valuesPath = FILE_PATH.getPath("data/navalData");
+        Trajectories trajectories = TrajectoriesFactory.fromFiles(variableNames, timePath, labelPath, valuesPath);
+        List<Trajectories> trainingAndTestset = trajectories.split(random, 0.8);
+        Trajectories trainingSet = trainingAndTestset.get(0);
+        Trajectories testSet = trainingAndTestset.get(1);
+        learn(random, trainingSet, testSet, LOGGER);
     }
 
-
-    private static void learn(Random random, Logger logger) throws InterruptedException {
-        //import database
-        TrajectoryMultiReconstruction data = new TrajectoryMultiReconstruction(ds2Times, ds2SpatialValues, ds2Labels, 0.8, random);
-        data.split();
-        double[][] performances = core(random, data, logger);
+    private static void learn(Random random, Trajectories trainingSet, Trajectories testSet, Logger logger) throws InterruptedException {
+        double[][] performances = core(random, trainingSet, testSet, logger);
         System.out.println("Classified as Negative Trajectories [percentage, variance] = " + Arrays.toString(performances[0]));
         System.out.println("Classified as Positive Trajectories [percentage, variance] = " + Arrays.toString(performances[1]));
     }
 
-    private static void learnCV(Random random, Logger logger) throws InterruptedException {
-        //import database
-        TrajectoryMultiReconstructionCV data = new TrajectoryMultiReconstructionCV(ds2Times, ds2SpatialValues, ds2Labels, random);
-        data.split(3, 5);
-        double[][] performances = core(random, data, logger);
-        System.out.println("Classified as Negative Trajectories [percentage, variance] = " + Arrays.toString(performances[0]));
-        System.out.println("Classified as Positive Trajectories [percentage, variance] = " + Arrays.toString(performances[1]));
-    }
-
-    private static double[][] core(Random random, DataSetSplit data, Logger logger) throws InterruptedException {
-        double[][][] positiveTrainingSet = data.getPositiveTrainingSet();
-        double[][][] negativeTrainingSet = data.getNegativeTrainingSet();
-        double[][][] positiveTestSet = data.getPoistiveTestSet();
-        double[][][] negativeTestSet = data.getNegativeTestSet();
-        double[] ds2Times = data.getTimes();
-        int NE = 50;   // number of formulae in the initial population
+    private static double[][] core(Random random, Trajectories trainingSet, Trajectories testSet, Logger logger) throws InterruptedException {
+        int NE = 100;   // number of formulae in the initial population
         FormulaPopulation pop = new FormulaPopulation(NE);
-        String[] variables = new String[]{"x", "y"};
+        String[] variables = new String[] { "x", "y" };
 
         //addVariableInformation to population, bounds of the interval parameters
         double atTime = 0;
-        double[] lower = new double[]{0, 0};
-        double[] upper = new double[]{80, 45};
+        double[] lower = new double[] { 0, 0 };
+        double[] upper = new double[] { 80, 45 };
 
         logger.log(Level.INFO, "Formula Variables:" + Arrays.toString(variables));
         logger.log(Level.INFO, "Formula Variables Lower Bounds:" + Arrays.toString(lower));
@@ -95,14 +85,14 @@ public class ExampleLearning {
         for (int i = 0; i < maxNumRand; i++) {
             pop.addRandomInitFormula();
         }
-        GeneticPopulation generation = null;
+        GeneticPopulation generation=null;
         int NG = 5;
         logger.log(Level.INFO, "NUMBER OF GENERATIONS:" + NG);
         logger.log(Level.INFO, "GENETIC ALGORITHM - START");
         for (int k = 0; k < NG; k++) {
             logger.log(Level.INFO, "GENERATION #:" + k);
             logger.log(Level.INFO, "> OPTIMIZING POPULATION PARAMETER");
-            generation = learning.optimizeGenerationParameters(pop, variables, ds2Times, positiveTrainingSet, negativeTrainingSet, positiveTestSet, negativeTestSet, atTime);
+            generation = learning.optimizeGenerationParameters(pop, variables, trainingSet, testSet, atTime);
             generation.sort();
             logger.log(Level.INFO, "-----------------------------");
             logger.log(Level.INFO, "FORMULA GENERATION");
@@ -113,7 +103,7 @@ public class ExampleLearning {
             logger.log(Level.INFO, "> APPLYING GENETIC OPERATIONS: OFFSPRING FORMULA GENERATION");
             bestHalf.geneticOperations(random, pop);
             logger.log(Level.INFO, "> OPTIMIZING OFFSPRING FORMULA PARAMETER");
-            GeneticPopulation betsHalfGeneration = learning.optimizeGenerationParameters(pop, variables, ds2Times, positiveTrainingSet, negativeTrainingSet, positiveTestSet, negativeTestSet, atTime);
+            GeneticPopulation betsHalfGeneration = learning.optimizeGenerationParameters(pop, variables, trainingSet, testSet, atTime);
             betsHalfGeneration.sort();
             betsHalfGeneration.getBestHalf();
             logger.log(Level.INFO, "> UNION OFFSPRING - PARENTS");
@@ -135,8 +125,9 @@ public class ExampleLearning {
         System.out.println("__________________________________________________");
         System.out.println(bestFormula.toString());
         System.out.println("Best Formula Parameters:" + Arrays.toString(bestFormula.getParameters()) + ":::::" + Arrays.toString(bestFormulaParameters));
-        double[] negativeSetPerformance = ComputeAverage.smcMultiTrajectories(ds2Times, negativeTestSet, variables, bestFormula, bestFormulaParameters, atTime);
-        double[] positiveSetPerformance = ComputeAverage.smcMultiTrajectories(ds2Times, positiveTestSet, variables, bestFormula, bestFormulaParameters, atTime);
-        return new double[][]{negativeSetPerformance, positiveSetPerformance};
+        //    double[] negativeSetPerformance = smcMultiTrajectories(ds2Times, negativeTestSet, variables, bestFormula, bestFormulaParameters, atTime);
+        //   double[] positiveSetPerformance = smcMultiTrajectories(ds2Times, positiveTestSet, variables, bestFormula, bestFormulaParameters, atTime);
+        //   return new double[][]{negativeSetPerformance, positiveSetPerformance};
+        return null;
     }
 }

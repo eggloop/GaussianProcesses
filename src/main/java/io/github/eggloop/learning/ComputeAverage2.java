@@ -43,9 +43,9 @@ class ComputeAverage2 {
             DoubleVerdict verdict = computeAverageRobustnessMultiTrajectory(trainingSet, variablesUnique, formula, point, atTime);
             double[] value1 = verdict.getStatsPositive();
             double[] value2 = verdict.getStatsNegative();
-            System.out.println(Arrays.toString(value1));
+           // System.out.println(Arrays.toString(value1));
             double abs = fitness.apply(value1, value2);
-            System.out.println(abs);
+           // System.out.println(abs);
             if (Double.isNaN(abs)) {
                 return 0;
             }

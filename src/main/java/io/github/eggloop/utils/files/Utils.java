@@ -79,6 +79,9 @@ public class Utils {
     public static  UnaryOperator<String> getFilePath(Class instance) {
         return fileName -> instance.getClassLoader().getResource(fileName).getPath();
     }
+    public static  FilePathUtility getPath(Class instance) {
+        return fileName -> instance.getClassLoader().getResource(fileName).getPath();
+    }
 
     public static double[][] readMatrixFromFile(String filePath) {
         int rows = 1;

@@ -10,8 +10,8 @@ public class StringUtils {
     }
 
     public static String formulaHash(String word, String[] keys) {
-        for (int i = 0; i < keys.length; i++) {
-            word = word.replace(keys[i], "");
+        for (String key : keys) {
+            word = word.replace(key, "");
         }
         return word;
     }

@@ -20,7 +20,7 @@ public class Learning {
     private final HashMap<String, double[]> bestParameters = new HashMap<>();
     private final HashMap<String, Double> bestScore = new HashMap<>();
 
-    Learning(Logger logger, BiFunction<double[], double[], Double> function) {
+    public Learning(Logger logger, BiFunction<double[], double[], Double> function) {
         this.logger = logger;
         this.function = function;
     }

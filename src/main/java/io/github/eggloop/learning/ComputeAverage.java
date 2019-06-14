@@ -175,6 +175,8 @@ class ComputeAverage {
         }
         double mean = Arrays.stream(b).sum() / b.length;
         double variance = Arrays.stream(b).map(x -> (x - mean) * (x - mean)).sum() / b.length;
+
         return new double[]{mean, variance};
+
     }
 }

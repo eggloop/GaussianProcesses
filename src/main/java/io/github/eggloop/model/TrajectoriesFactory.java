@@ -42,8 +42,8 @@ public class TrajectoriesFactory {
         double[] labels = Utils.readVectorFromFile(labelsPath);
         double[] times = Utils.readVectorFromFile(timesPath);
         double[][][] values = Utils.readMatrixMultiFromFile(times.length, valuesPath);
-        List<Trajectory> positive = new ArrayList();
-        List<Trajectory> negative = new ArrayList();
+        List<Trajectory> positive = new ArrayList<>();
+        List<Trajectory> negative = new ArrayList<>();
         for (int i = 0; i < labels.length; i++) {
             Trajectory trajectory = new Trajectory(times, new Context(variableNames), values[i]);
             if (labels[i] == 1) {

@@ -31,7 +31,7 @@ public class GeneticPopulation {
     }
 
 
-    void sort() {
+    public void sort() {
         int[] sortedIndices = IntStream.range(0, rankScore.size())
                 .boxed().sorted(Comparator.comparingDouble(rankScore::get))
                 .mapToInt(ele -> ele).toArray();
@@ -56,30 +56,30 @@ public class GeneticPopulation {
         return builder.toString();
     }
 
-    Formula getBestFromula() {
+    public Formula getBestFromula() {
         int lastFormulaOfArray = rankFormulae.size() - 1;
         return rankFormulae.get(lastFormulaOfArray);
     }
 
-    double[] getBestFormulaParameters() {
+    public double[] getBestFormulaParameters() {
         int lastFormulaOfArray = rankFormulae.size() - 1;
         return rankParameters.get(lastFormulaOfArray);
     }
 
-    GeneticPopulation getBestHalf() {
+    public GeneticPopulation getBestHalf() {
         rankFormulae = rankFormulae.subList(rankScore.size() - rankScore.size() / 2, rankScore.size());
         rankParameters = rankParameters.subList(rankScore.size() - rankScore.size() / 2, rankScore.size());
         rankScore = rankScore.subList(rankScore.size() - rankScore.size() / 2, rankScore.size());
         return new GeneticPopulation(rankFormulae, rankParameters, rankScore);
     }
 
-    void addall(GeneticPopulation betsHalfGeneration) {
+    public void addall(GeneticPopulation betsHalfGeneration) {
         rankFormulae.addAll(betsHalfGeneration.getRankFormulae());
         rankParameters.addAll(betsHalfGeneration.getRankParameters());
         rankScore.addAll(betsHalfGeneration.getRankScore());
     }
 
-    void geneticOperations(Random ran, FormulaPopulation pop) {
+    public void geneticOperations(Random ran, FormulaPopulation pop) {
         List<Double> rankScoreParents = getRankScore();
         List<Formula> rankFormulaeParents = getRankFormulae();
         double[] cumScore = cum(rankScoreParents);

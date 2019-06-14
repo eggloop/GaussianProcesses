@@ -22,12 +22,12 @@ public class Learning2 {
     private final HashMap<String, double[]> bestParameters = new HashMap<>();
     private final HashMap<String, Double> bestScore = new HashMap<>();
 
-    Learning2(Logger logger, BiFunction<double[], double[], Double> function) {
+    public Learning2(Logger logger, BiFunction<double[], double[], Double> function) {
         this.logger = logger;
         this.function = function;
     }
 
-    GeneticPopulation optimizeGenerationParameters(FormulaPopulation pop, String[] variables, Trajectories trainingSet, Trajectories testSet, double atTime) throws InterruptedException {
+    public GeneticPopulation optimizeGenerationParameters(FormulaPopulation pop, String[] variables, Trajectories trainingSet, Trajectories testSet, double atTime) throws InterruptedException {
         List<Formula> rankFormulae = new ArrayList<>();
         List<double[]> rankParameters = new ArrayList<>();
         List<Double> rankScore = new ArrayList<>();
