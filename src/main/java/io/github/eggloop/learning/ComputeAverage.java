@@ -20,8 +20,8 @@ import java.util.concurrent.Callable;
 import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
-class ComputeAverage {
-    static double[] averageMultiTrajectory(int maxIterations, BiFunction<double[], double[], Double> fitness, String[] variablesUnique, double[] ds2Times, double[][][] normal_model, double[][][] ineffective_model, Formula formula, FormulaPopulation pop, double[] timeBoundsFormula, double atTime) throws InterruptedException {
+public class ComputeAverage {
+    public static double[] averageMultiTrajectory(int maxIterations, BiFunction<double[], double[], Double> fitness, String[] variablesUnique, double[] ds2Times, double[][][] normal_model, double[][][] ineffective_model, Formula formula, FormulaPopulation pop, double[] timeBoundsFormula, double atTime) throws InterruptedException {
         String[] variables = formula.getVariables();
         String[] boundsFormula = formula.getTimeBounds();
         double[] timeBoundsLb = Arrays.stream(boundsFormula).mapToDouble(x -> timeBoundsFormula[0]).toArray();
@@ -157,7 +157,7 @@ class ComputeAverage {
     }
 
 
-    static double[] smcMultiTrajectories(double[] times, double[][][] trajectories, String[] variables, Formula formula, double[] formulaParameters, double atTime) {
+    public static double[] smcMultiTrajectories(double[] times, double[][][] trajectories, String[] variables, Formula formula, double[] formulaParameters, double atTime) {
         double[] b = new double[trajectories.length];
         Context ns = new Context();
         for (String s : variables) {
