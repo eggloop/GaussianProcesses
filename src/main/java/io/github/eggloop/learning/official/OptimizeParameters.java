@@ -20,11 +20,11 @@ public class OptimizeParameters {
     //::phi:: G[Tl_176, Tu_176] ((y >= Theta_3 | z <= Theta_6))  ::score:: 1.90375763520218 ::parameters:: [11.0, 11.0, 48.990792215517644, 37.53885223004586]
     public static void main(String[] args) {
         String[] variables = new String[]{"X", "Y"};
-        String[] parameters = new String[]{"Tl_176", "Tu_176", "a"};
-        double[] parametersValues = new double[]{0, 40 - 0.4, 0.1};
-        String formula = "F[Tl_176, Tu_176] ((Y-X)>a & (F[0, 0.4] (X-Y)>a))\n)";
+//        String[] parameters = new String[]{"Tl_176", "Tu_176", "a"};
+//        double[] parametersValues = new double[]{0, 40 - 0.4, 0.1};
+        String formula = "F[0, 39.6] ((Y-X)>0.1 & (F[0, 0.4] (X-Y)>0.1))\n)";
 //        int positiveClassified = check(ds2Times, ds2SpatialValues, variables, parameters, formula, parametersValues, 0);
-        int[] missClassified = check2(lables, ds2Times, ds2SpatialValues, variables, parameters, formula, parametersValues, 0);
+        int[] missClassified = check2(lables, ds2Times, ds2SpatialValues, variables, null, formula, null, 0);
         System.out.println("TOTAL:" + ds2SpatialValues.length);
 //        System.out.println("POSITIVE CLASSIFIED:" + positiveClassified);
         System.out.println("POSITIVE MISSCLASSIFIED COUNTER:" + missClassified[0]);
@@ -45,7 +45,7 @@ public class OptimizeParameters {
         return Arrays.stream(b).sum();
     }
 
-    private static int [] check2(double[] labels, double[] times, double[][][] trajectories, String[] variables, String[] parameters, String formula, double[] parameterValues, double atTime) {
+    private static int[] check2(double[] labels, double[] times, double[][][] trajectories, String[] variables, String[] parameters, String formula, double[] parameterValues, double atTime) {
         Context ns = new Context(variables);
         MitlFactory factory = new MitlFactory(ns);
         String text = StringUtils.replace(formula, parameters, parameterValues) + "\n";
@@ -55,16 +55,16 @@ public class OptimizeParameters {
 
         for (int i = 0; i < trajectories.length; i++) {
             Trajectory x = new Trajectory(times, ns, trajectories[i]);
-            if(prop.evaluate(x,atTime)){
-                if(labels[i]<0){
+            if (prop.evaluate(x, atTime)) {
+                if (labels[i] < 0) {
                     positiveMissClassified++;
                 }
             } else {
-                if(labels[i]>0){
+                if (labels[i] > 0) {
                     negativeMissClassified++;
                 }
             }
         }
-        return new int[]{positiveMissClassified,negativeMissClassified};
+        return new int[]{positiveMissClassified, negativeMissClassified};
     }
 }
