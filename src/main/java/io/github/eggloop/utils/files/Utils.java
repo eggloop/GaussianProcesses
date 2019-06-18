@@ -1,6 +1,12 @@
 package io.github.eggloop.utils.files;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -10,8 +16,8 @@ import java.util.function.UnaryOperator;
  * Created by simone on 30/12/16.
  */
 public class Utils {
-    public static void savetofile(String file, boolean[][] data)
-            throws FileNotFoundException {
+
+    public static void savetofile(String file, boolean[][] data) throws FileNotFoundException {
         final PrintWriter pw = new PrintWriter(file);
         for (boolean[] aData : data) {
             final int last_j = aData.length - 1;
@@ -25,8 +31,7 @@ public class Utils {
         pw.close();
     }
 
-    public static void savetofile(String file, double[][] data)
-            throws FileNotFoundException {
+    public static void savetofile(String file, double[][] data) throws FileNotFoundException {
         final PrintWriter pw = new PrintWriter(file);
         for (double[] aData : data) {
             final int last_j = aData.length - 1;
@@ -40,7 +45,6 @@ public class Utils {
         pw.close();
     }
 
-
     private static String designToString(double[] design) {
         StringBuilder build = new StringBuilder();
         for (double v : design) {
@@ -49,7 +53,6 @@ public class Utils {
         }
 
         return build.substring(0, build.length() - 1);
-
     }
 
     public static void writeDesignToFile(String filepath, List<double[]> design) {
@@ -76,10 +79,11 @@ public class Utils {
         }
     }
 
-    public static  UnaryOperator<String> getFilePath(Class instance) {
+    public static UnaryOperator<String> getFilePath(Class instance) {
         return fileName -> instance.getClassLoader().getResource(fileName).getPath();
     }
-    public static  FilePathUtility getPath(Class instance) {
+
+    public static FilePathUtility getPath(Class instance) {
         return fileName -> instance.getClassLoader().getResource(fileName).getPath();
     }
 
@@ -105,7 +109,6 @@ public class Utils {
             if (scanner != null) {
                 scanner.close();
             }
-
         }
         double[][] x = new double[rows][cols];
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath));) {
@@ -171,6 +174,57 @@ public class Utils {
         }
     }
 
+    public static double[] readVariables(String line) {
+        return Arrays.stream(line.split(",")).mapToDouble(Double::valueOf).toArray();
+    }
+
+    public static double[][] readSingleTrajectory(String[] lines) {
+        double[][] trajectory = new double[lines.length][];
+        for (int i = 0; i < trajectory.length; i++) {
+            trajectory[i] = readVariables(lines[i]);
+        }
+        return trajectory;
+    }
+
+    public static double[][][] readNewMatrixMultiFromFile(int m, String filePath) {
+        int rows = 1;
+        int trajXrows = 0;
+        try {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                while (reader.readLine() != null) {
+                    rows++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                while (!reader.readLine().equals("")) {
+                    trajXrows++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int nTrajectories = rows / (trajXrows + 1);
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            double[][][] trajectories = new double[nTrajectories][m][];
+            for (int i = 0; i < trajectories.length; i++) {
+                for (int j = 0; j < m; j++) {
+                    trajectories[i][j] = readVariables(reader.readLine());
+                }
+                reader.readLine();
+            }
+            return trajectories;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static double[][][] readMatrixMultiFromFile(int n, String filePath) {
         int rows = 1;
         int cols = 0;
@@ -213,7 +267,6 @@ public class Utils {
                             }
                         }
                     }
-
                 }
             }
             return x;
@@ -221,7 +274,5 @@ public class Utils {
             throw new RuntimeException(e.getMessage());
         }
     }
-
-
 }
 

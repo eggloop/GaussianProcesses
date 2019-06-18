@@ -13,16 +13,15 @@ import java.util.function.UnaryOperator;
 
 public class OptimizeParameters {
     private static final UnaryOperator<String> FILE_PATH = Utils.getFilePath(Learning.class);
-    private static double[] ds2Times = Utils.readVectorFromFile(FILE_PATH.apply("temporal/synthTime_12.txt"));
-    private static double[][][] ds2SpatialValues = Utils.readMatrixMultiFromFile(ds2Times.length, FILE_PATH.apply("temporal/synthData_12.txt"));
+    private static double[] ds2Times = Utils.readVectorFromFile(FILE_PATH.apply("ST_LIB_DATA/ev_spike/timexy.txt"));
+    private static double[][][] ds2SpatialValues = Utils.readNewMatrixMultiFromFile(2, FILE_PATH.apply("ST_LIB_DATA/ev_spike/trajxy.txt"));
 
     //::phi:: G[Tl_176, Tu_176] ((y >= Theta_3 | z <= Theta_6))  ::score:: 1.90375763520218 ::parameters:: [11.0, 11.0, 48.990792215517644, 37.53885223004586]
     public static void main(String[] args) {
-
-        String[] variables = new String[]{"y", "z"};
-        String[] parameters = new String[]{"Tl_176", "Tu_176", "Theta_3", "Theta_6"};
-        double[] parametersValues = new double[]{11.0, 11.0, 48.990792215517644, 37.53885223004586};
-        String formula = "G[Tl_176, Tu_176] ((y >= Theta_3 | z <= Theta_6))";
+        String[] variables = new String[]{"X", "Y"};
+        String[] parameters = new String[]{"Tl_176", "Tu_176", "a"};
+        double[] parametersValues = new double[]{0, 40-0.4, 0.1};
+        String formula = "F[Tl_176, Tu_176] ((Y-X)>a & (F[0, 0.4] (X-Y)>a))\n)";
         int positiveClassified = check(ds2Times, ds2SpatialValues, variables, parameters, formula, parametersValues, 0);
         System.out.println("TOTAL:" + ds2SpatialValues.length);
         System.out.println("POSITIVE CLASSIFIED:" + positiveClassified);
