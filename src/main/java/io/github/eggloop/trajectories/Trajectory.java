@@ -4,12 +4,12 @@ package io.github.eggloop.trajectories;
 public class Trajectory {
 
     private String[] variables;
-    private double[] time;
+    private double[] times;
     private double[][] values;
 
-    public Trajectory(String[] names, double[] time, double[][] values) {
-        this.variables = names;
-        this.time = time;
+    public Trajectory(String[] variables, double[] times, double[][] values) {
+        this.variables = variables;
+        this.times = times;
         this.values = values;
     }
 
@@ -17,13 +17,11 @@ public class Trajectory {
         return variables;
     }
 
-    public double[] getTime() {
-        return time;
+    public double[] getTimes() {
+        return times;
     }
 
     public double[][] getValues() {
         return values;
     }
-
-
 }

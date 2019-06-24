@@ -1,4 +1,4 @@
-grammar STL_minimal;
+grammar STL;
 
 prog	:	stat+
 	    ;
@@ -8,14 +8,14 @@ stat:   formula NEWLINE                 # textformula
     |   NEWLINE                         # blank
     ;
 
-formula: LPAR formula RPAR                                 # parensFormula
-	|    formula op=(AND|OR) formula  # AndOr
-	|	 NOT formula                            # Not
+formula: LPAR formula RPAR op=(AND|OR) LPAR formula  RPAR  # AndOr
+	|	 NOT LPAR formula  RPAR                            # Not
 	|    expr op=(GT|GE|LT|LE|E) expr                      # Atom
+	|    LPAR formula RPAR                                 # parensFormula
 	|    op =(TRUE|FALSE)                                  # trueFalse
-	|	 formula U  interval formula   # U
-	|    F  interval formula                     # F
-	|	 G  interval formula                     # G
+	|	 LPAR formula RPAR U  interval LPAR formula RPAR   # U
+	|    F  interval LPAR formula RPAR                     # F
+	|	 G  interval LPAR formula RPAR                     # G
 	;
 
 expr:   expr op=(MULT|DIV|PLUS|MINUS) expr      # AlgOp
@@ -24,6 +24,7 @@ expr:   expr op=(MULT|DIV|PLUS|MINUS) expr      # AlgOp
     |   op=(PARAMETERS|SERIES)              # id
     |   LPAR expr RPAR                      # parensExpr
     ;
+
 
 
 interval : LBRAT  expr COMMA  expr RBRAT
@@ -62,6 +63,12 @@ LT	:	'<';
 LE	:	'<=';
 E	:	'==';
 
+
+
+// $<Terminal
+
+//INTEGER	:	'0'..'9'+
+//	;
 
 NUMBER
 	:   ('0'..'9')+ ('.')* ('0'..'9')* EXPONENT?
