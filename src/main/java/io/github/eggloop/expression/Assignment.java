@@ -6,8 +6,8 @@ public class Assignment {
 
     private Map<String, Double> assignment;
 
-    public Assignment(Map<String, Double> assignement) {
-        this.assignment = assignement;
+    public Assignment(Map<String, Double> assignment) {
+        this.assignment = assignment;
     }
 
     boolean contains(String name) {

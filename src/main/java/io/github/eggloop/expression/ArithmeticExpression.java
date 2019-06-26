@@ -2,6 +2,6 @@ package io.github.eggloop.expression;
 
 public interface ArithmeticExpression {
 
-    ArithmeticExpression evaluate(Assignment assignment);
+    double evaluate(Assignment assignment) throws VariableException;
 
 }
