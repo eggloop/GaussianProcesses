@@ -1,5 +1,9 @@
 package io.github.eggloop.expression;
 
+import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
+import io.github.eggloop.expression.arithmetic.Assignment;
+import io.github.eggloop.expression.arithmetic.Variable;
+import io.github.eggloop.expression.arithmetic.VariableException;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

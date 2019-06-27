@@ -1,5 +1,6 @@
 package io.github.eggloop.expression;
 
+import io.github.eggloop.expression.arithmetic.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package io.github.eggloop.expression;
+package io.github.eggloop.expression.arithmetic;
 
 import java.util.Map;
 
