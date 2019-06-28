@@ -4,8 +4,8 @@ import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
 
 public class LowerEqual implements RelationalExpression {
 
-    public ArithmeticExpression left;
-    public ArithmeticExpression right;
+    private ArithmeticExpression left;
+    private ArithmeticExpression right;
 
     public LowerEqual(ArithmeticExpression left, ArithmeticExpression right) {
         this.left = left;
@@ -14,6 +14,6 @@ public class LowerEqual implements RelationalExpression {
 
     @Override
     public Object evaluate(Domain domain) {
-        return domain.lowerEqual(left,right);
+        return domain.lowerEqualThan(left,right);
     }
 }

@@ -15,4 +15,9 @@ public class Variable implements ArithmeticExpression {
         }
         throw new VariableException(String.format("MISSING VARIABLES %s", name));
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -4,8 +4,8 @@ import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
 
 public class Greater implements RelationalExpression {
 
-    public ArithmeticExpression left;
-    public ArithmeticExpression right;
+    private ArithmeticExpression left;
+    private ArithmeticExpression right;
 
     public Greater(ArithmeticExpression left, ArithmeticExpression right) {
         this.left = left;
@@ -14,6 +14,11 @@ public class Greater implements RelationalExpression {
 
     @Override
     public Object evaluate(Domain domain) {
-        return domain.greater(left,right);
+        return domain.greaterThan(left, right);
+    }
+
+    @Override
+    public String toString() {
+        return left.toString() + " > " + right.toString();
     }
 }
