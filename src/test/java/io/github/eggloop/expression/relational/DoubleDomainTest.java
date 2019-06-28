@@ -24,7 +24,7 @@ class DoubleDomainTest {
         DoubleDomain domain = new DoubleDomain();
         ArithmeticExpression left = new Variable("X");
         ArithmeticExpression right = new Variable("Y");
-        lowerEqualThan = domain.lowerEqualThan(left, right);
+        lowerEqualThan = domain.lowerEqualTo(left, right);
         lowerThan = domain.lowerThan(left, right);
         greaterThan = domain.greaterThan(left, right);
         greaterEqualTo = domain.greaterEqualTo(left, right);

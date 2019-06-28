@@ -9,8 +9,8 @@ public class Constant implements ArithmeticExpression {
     }
 
     @Override
-    public double evaluate(Assignment assignment) {
-        return value;
+    public AssignmentFunction compile() {
+        return assignment -> value;
     }
 
     @Override

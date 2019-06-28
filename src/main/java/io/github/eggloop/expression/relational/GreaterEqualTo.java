@@ -2,18 +2,20 @@ package io.github.eggloop.expression.relational;
 
 import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
 
-public class LowerEqual implements RelationalExpression {
+public class GreaterEqualTo implements RelationalExpression {
 
     private ArithmeticExpression left;
     private ArithmeticExpression right;
 
-    public LowerEqual(ArithmeticExpression left, ArithmeticExpression right) {
+    public GreaterEqualTo(ArithmeticExpression left, ArithmeticExpression right) {
         this.left = left;
         this.right = right;
     }
 
+
     @Override
-    public Object evaluate(Domain domain) {
-        return domain.lowerEqualThan(left,right);
+    public DomainFunction evaluate(Domain domain) {
+        return domain.greaterEqualTo(left,right);
+
     }
 }

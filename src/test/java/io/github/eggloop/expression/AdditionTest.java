@@ -19,6 +19,6 @@ class AdditionTest {
 
         ArithmeticExpression addition = new Addition(new Variable("X"), new Variable("Y"));
 
-        assertEquals(3., addition.evaluate(assignment));
+        assertEquals(3., addition.compile(assignment));
     }
 }

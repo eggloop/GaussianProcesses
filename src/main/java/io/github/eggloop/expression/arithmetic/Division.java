@@ -12,6 +12,6 @@ public class Division implements ArithmeticExpression {
 
     @Override
     public double evaluate(Assignment assignment) throws VariableException {
-        return left.evaluate(assignment) / right.evaluate(assignment);
+        return left.compile(assignment) / right.compile(assignment);
     }
 }

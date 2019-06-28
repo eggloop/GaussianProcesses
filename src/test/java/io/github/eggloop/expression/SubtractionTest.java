@@ -19,6 +19,6 @@ class SubtractionTest {
 
         ArithmeticExpression addition = new Subtraction(new Variable("X"), new Variable("Y"));
 
-        assertEquals(-1., addition.evaluate(assignment));
+        assertEquals(-1., addition.compile(assignment));
     }
 }

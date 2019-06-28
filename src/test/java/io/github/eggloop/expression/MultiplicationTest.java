@@ -19,6 +19,6 @@ class MultiplicationTest {
 
         ArithmeticExpression addition = new Multiplication(new Variable("X"), new Variable("Y"));
 
-        assertEquals(2., addition.evaluate(assignment));
+        assertEquals(2., addition.compile(assignment));
     }
 }

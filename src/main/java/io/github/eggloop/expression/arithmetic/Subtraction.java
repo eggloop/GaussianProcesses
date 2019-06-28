@@ -11,7 +11,7 @@ public class Subtraction implements ArithmeticExpression {
     }
 
     @Override
-    public double evaluate(Assignment assignment) throws VariableException {
-        return left.evaluate(assignment) - right.evaluate(assignment);
+    public AssignmentFunction compile() {
+        return assignment -> left.compile().evaluate(assignment) - right.compile().evaluate(assignment);
     }
 }

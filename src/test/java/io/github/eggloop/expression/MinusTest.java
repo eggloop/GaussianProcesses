@@ -18,6 +18,6 @@ class MinusTest {
 
         ArithmeticExpression addition = new Minus(new Variable("X"));
 
-        assertEquals(-1., addition.evaluate(assignment));
+        assertEquals(-1., addition.compile(assignment));
     }
 }

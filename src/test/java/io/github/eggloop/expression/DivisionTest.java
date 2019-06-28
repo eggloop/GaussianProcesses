@@ -19,6 +19,6 @@ class DivisionTest {
 
         ArithmeticExpression addition = new Division(new Variable("X"), new Variable("Y"));
 
-        assertEquals(0.5, addition.evaluate(assignment));
+        assertEquals(0.5, addition.compile(assignment));
     }
 }

@@ -10,6 +10,6 @@ public class Minus implements ArithmeticExpression {
 
     @Override
     public double evaluate(Assignment assignment) throws VariableException {
-        return -argument.evaluate(assignment);
+        return -argument.compile(assignment);
     }
 }

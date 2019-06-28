@@ -9,11 +9,8 @@ public class Variable implements ArithmeticExpression {
     }
 
     @Override
-    public double evaluate(Assignment assignment) throws VariableException {
-        if (assignment.contains(name)) {
-            return assignment.get(name);
-        }
-        throw new VariableException(String.format("MISSING VARIABLES %s", name));
+    public AssignmentFunction compile() {
+        return assignment -> assignment.get(name);
     }
 
     @Override
