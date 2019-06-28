@@ -11,7 +11,7 @@ public class Addition implements ArithmeticExpression {
     }
 
     @Override
-    public double evaluate(Assignment assignment) throws VariableException {
-        return left.compile(assignment) + right.compile(assignment);
+    public AssignmentFunction compile() {
+        return assignment -> left.compile().evaluate(assignment) + right.compile().evaluate(assignment);
     }
 }

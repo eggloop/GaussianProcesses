@@ -6,26 +6,26 @@ public class DoubleDomain implements Domain<Double> {
 
     @Override
     public DomainFunction<Double> lowerEqualTo(ArithmeticExpression left, ArithmeticExpression right) {
-        return assignment -> right.compile(assignment) - left.compile(assignment);
+        return assignment -> right.compile().evaluate(assignment) - left.compile().evaluate(assignment);
     }
 
     @Override
     public DomainFunction<Double> lowerThan(ArithmeticExpression left, ArithmeticExpression right) {
-        return assignment -> right.compile(assignment) - left.compile(assignment);
+        return assignment -> right.compile().evaluate(assignment) - left.compile().evaluate(assignment);
     }
 
     @Override
     public DomainFunction<Double> greaterEqualTo(ArithmeticExpression left, ArithmeticExpression right) {
-        return assignment -> left.compile(assignment) - right.compile(assignment);
+        return assignment -> left.compile().evaluate(assignment) - right.compile().evaluate(assignment);
     }
 
     @Override
     public DomainFunction<Double> greaterThan(ArithmeticExpression left, ArithmeticExpression right) {
-        return assignment -> left.compile(assignment) - right.compile(assignment);
+        return assignment -> left.compile().evaluate(assignment) - right.compile().evaluate(assignment);
     }
 
     @Override
     public DomainFunction<Double> equalTo(ArithmeticExpression left, ArithmeticExpression right) {
-        return assignment -> 0. - Math.abs(left.compile(assignment) - right.compile(assignment));
+        return assignment -> 0. - Math.abs(left.compile().evaluate(assignment) - right.compile().evaluate(assignment));
     }
 }

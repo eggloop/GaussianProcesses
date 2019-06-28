@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class BooleanDomainTest {
 
     private DomainFunction<Boolean> lowerEqualThan;
@@ -33,10 +30,9 @@ class BooleanDomainTest {
 
     @Test
     void test1() throws VariableException {
-        Map<String, Double> assignmentMap = new HashMap<>();
-        assignmentMap.put("X", 10.);
-        assignmentMap.put("Y", 2.);
-        Assignment assignment = new Assignment(assignmentMap);
+        Assignment assignment = new Assignment();
+        assignment.put("X", 10);
+        assignment.put("Y", 2.);
 
         Assertions.assertFalse(lowerThan.evaluate(assignment));
         Assertions.assertFalse(lowerEqualThan.evaluate(assignment));
@@ -47,10 +43,9 @@ class BooleanDomainTest {
 
     @Test
     void test2() throws VariableException {
-        Map<String, Double> assignmentMap = new HashMap<>();
-        assignmentMap.put("X", 2.);
-        assignmentMap.put("Y", 10.);
-        Assignment assignment = new Assignment(assignmentMap);
+        Assignment assignment = new Assignment();
+        assignment.put("X", 2.);
+        assignment.put("Y", 10.);
 
         Assertions.assertTrue(lowerThan.evaluate(assignment));
         Assertions.assertTrue(lowerEqualThan.evaluate(assignment));
@@ -61,10 +56,9 @@ class BooleanDomainTest {
 
     @Test
     void test3() throws VariableException {
-        Map<String, Double> assignmentMap = new HashMap<>();
-        assignmentMap.put("X", 2.);
-        assignmentMap.put("Y", 2.);
-        Assignment assignment = new Assignment(assignmentMap);
+        Assignment assignment = new Assignment();
+        assignment.put("X", 2.);
+        assignment.put("Y", 2.);
 
         Assertions.assertFalse(lowerThan.evaluate(assignment));
         Assertions.assertTrue(lowerEqualThan.evaluate(assignment));

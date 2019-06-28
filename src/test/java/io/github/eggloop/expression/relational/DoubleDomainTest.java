@@ -8,11 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class DoubleDomainTest {
-    private static final double EPS = 1E-14;
     private DomainFunction<Double> lowerEqualThan;
     private DomainFunction<Double> lowerThan;
     private DomainFunction<Double> greaterThan;
@@ -33,10 +29,9 @@ class DoubleDomainTest {
 
     @Test
     void test1() throws VariableException {
-        Map<String, Double> assignmentMap = new HashMap<>();
-        assignmentMap.put("X", 10.);
-        assignmentMap.put("Y", 2.);
-        Assignment assignment = new Assignment(assignmentMap);
+        Assignment assignment = new Assignment();
+        assignment.put("X", 10.);
+        assignment.put("Y", 2.);
 
         Assertions.assertEquals(-8., lowerThan.evaluate(assignment));
         Assertions.assertEquals(-8., lowerEqualThan.evaluate(assignment));
@@ -47,10 +42,9 @@ class DoubleDomainTest {
 
     @Test
     void test2() throws VariableException {
-        Map<String, Double> assignmentMap = new HashMap<>();
-        assignmentMap.put("X", 2.);
-        assignmentMap.put("Y", 10.);
-        Assignment assignment = new Assignment(assignmentMap);
+        Assignment assignment = new Assignment();
+        assignment.put("X", 2.);
+        assignment.put("Y", 10.);
 
         Assertions.assertEquals(8., lowerThan.evaluate(assignment));
         Assertions.assertEquals(8., lowerEqualThan.evaluate(assignment));
@@ -61,10 +55,9 @@ class DoubleDomainTest {
 
     @Test
     void test3() throws VariableException {
-        Map<String, Double> assignmentMap = new HashMap<>();
-        assignmentMap.put("X", 2.);
-        assignmentMap.put("Y", 2.);
-        Assignment assignment = new Assignment(assignmentMap);
+        Assignment assignment = new Assignment();
+        assignment.put("X", 2.);
+        assignment.put("Y", 2.);
 
         Assertions.assertEquals(0, lowerThan.evaluate(assignment));
         Assertions.assertEquals(0, lowerEqualThan.evaluate(assignment));

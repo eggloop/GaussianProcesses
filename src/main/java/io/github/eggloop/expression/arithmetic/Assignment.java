@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Assignment<T> {
 
-    private Map<String, T> assignment;
+    private Map<String, Double> assignment;
 
     public Assignment() {
         this.assignment = new HashMap<>();
@@ -15,11 +15,11 @@ public class Assignment<T> {
         return assignment.containsKey(name);
     }
 
-    public T get(String key) {
-        return  assignment.get(key);
+    public double get(String key) {
+        return assignment.get(key);
     }
 
-    public void put(String key, T value) {
+    public void put(String key, double value) {
         assignment.put(key, value);
     }
 }

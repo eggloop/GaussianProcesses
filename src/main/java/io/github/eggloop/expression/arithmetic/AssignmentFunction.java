@@ -1,6 +1,6 @@
 package io.github.eggloop.expression.arithmetic;
 
-interface AssignmentFunction<T> {
+public interface AssignmentFunction {
 
     double evaluate(Assignment assignment);
 

@@ -9,7 +9,7 @@ public class Minus implements ArithmeticExpression {
     }
 
     @Override
-    public double evaluate(Assignment assignment) throws VariableException {
-        return -argument.compile(assignment);
+    public AssignmentFunction compile() {
+        return assignment -> -argument.compile().evaluate(assignment);
     }
 }
