@@ -14,5 +14,11 @@ public class LowerThan implements RelationalExpression {
 
     @Override
     public DomainFunction evaluate(Domain domain) {
-        return domain.lowerThan(left,right);    }
+        return domain.lowerThan(left, right);
+    }
+
+    @Override
+    public String toString() {
+        return left.toString() + " < " + right.toString();
+    }
 }

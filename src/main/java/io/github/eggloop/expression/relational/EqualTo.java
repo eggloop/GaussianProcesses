@@ -16,4 +16,9 @@ public class EqualTo implements RelationalExpression {
     public DomainFunction evaluate(Domain domain) {
         return domain.equalTo(left, right);
     }
+
+    @Override
+    public String toString() {
+        return left.toString() + " == " + right.toString();
+    }
 }

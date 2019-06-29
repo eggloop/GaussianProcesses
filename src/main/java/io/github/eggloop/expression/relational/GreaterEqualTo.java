@@ -12,10 +12,13 @@ public class GreaterEqualTo implements RelationalExpression {
         this.right = right;
     }
 
-
     @Override
     public DomainFunction evaluate(Domain domain) {
         return domain.greaterEqualTo(left,right);
+    }
 
+    @Override
+    public String toString() {
+        return left.toString() + " >= " + right.toString();
     }
 }

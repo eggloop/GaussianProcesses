@@ -16,4 +16,9 @@ public class LowerEqualTo implements RelationalExpression {
     public DomainFunction evaluate(Domain domain) {
         return domain.lowerEqualTo(left,right);
     }
+
+    @Override
+    public String toString() {
+        return left.toString() + " <= " + right.toString();
+    }
 }
