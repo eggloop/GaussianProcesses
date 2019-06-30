@@ -10,11 +10,12 @@ public class Constant implements ArithmeticExpression {
 
     @Override
     public AssignmentFunction compile() {
-        return assignment -> value;
+        return assignment -> this;
     }
 
     @Override
     public String toString() {
         return String.valueOf(value);
     }
+
 }

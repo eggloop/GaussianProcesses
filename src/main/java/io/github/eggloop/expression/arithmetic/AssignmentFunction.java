@@ -2,6 +2,6 @@ package io.github.eggloop.expression.arithmetic;
 
 public interface AssignmentFunction {
 
-    double evaluate(Assignment assignment);
+    ArithmeticExpression evaluate(Assignment assignment);
 
 }

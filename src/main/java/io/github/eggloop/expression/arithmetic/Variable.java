@@ -10,7 +10,7 @@ public class Variable implements ArithmeticExpression {
 
     @Override
     public AssignmentFunction compile() {
-        return assignment -> assignment.get(name);
+        return assignment -> assignment.contains(name) ? new Constant(assignment.get(name)) : this;
     }
 
     @Override
