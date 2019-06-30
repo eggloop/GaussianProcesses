@@ -19,12 +19,12 @@ class EqualToTest {
     }
 
     @Test
-    void evaluateTest() throws VariableException {
-        Assignment<Double> assignment = new Assignment<>();
+    void evaluateTest() {
+        Assignment assignment = new Assignment();
         assignment.put("X", 0.);
         BooleanDomain domain = new BooleanDomain();
 
-        DomainFunction<Boolean> compiledEqualTo = equalTo.evaluate(domain);
+        DomainFunction<Boolean> compiledEqualTo = equalTo.compile(domain);
 
         assertTrue(compiledEqualTo.evaluate(assignment));
     }

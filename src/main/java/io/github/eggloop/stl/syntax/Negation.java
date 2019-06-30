@@ -1,6 +1,6 @@
 package io.github.eggloop.stl.syntax;
 
-public class Negation {
+public class Negation implements STL {
 
     private STL argument;
 
@@ -10,6 +10,11 @@ public class Negation {
 
     @Override
     public String toString() {
-        return " ¬" + argument.toString();
+        return SyntaxUtils.toStringUnaryFormula("!", argument.toString());
+    }
+
+    @Override
+    public String toLogicString() {
+        return SyntaxUtils.toStringUnaryFormula("¬", argument.toString());
     }
 }

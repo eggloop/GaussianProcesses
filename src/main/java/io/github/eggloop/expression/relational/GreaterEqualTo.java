@@ -13,7 +13,7 @@ public class GreaterEqualTo implements RelationalExpression {
     }
 
     @Override
-    public DomainFunction evaluate(Domain domain) {
+    public DomainFunction compile(Domain domain) {
         return domain.greaterEqualTo(left,right);
     }
 

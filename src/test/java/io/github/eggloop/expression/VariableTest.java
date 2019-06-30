@@ -27,7 +27,7 @@ class VariableTest {
         ArithmeticExpression addition = new Variable("X");
         AssignmentFunction compiledAddition = addition.compile();
 
-//        VariableException variableException = assertThrows(VariableException.class, () -> compiledAddition.evaluate(assignment));
+//        VariableException variableException = assertThrows(VariableException.class, () -> compiledAddition.compile(assignment));
 
         //assertEquals("MISSING VARIABLES X", variableException.getMessage());
         //TODO:add exception handling

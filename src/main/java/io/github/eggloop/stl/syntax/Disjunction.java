@@ -12,6 +12,12 @@ public class Disjunction implements STL {
 
     @Override
     public String toString() {
-        return left.toString() + " ∨ " + right.toString();
+        return SyntaxUtils.toStringBinaryFormula(left.toString(), "|", right.toString());
     }
+
+    @Override
+    public String toLogicString() {
+        return SyntaxUtils.toStringBinaryFormula(left.toString(), "∨", right.toString());
+    }
+
 }

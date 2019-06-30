@@ -18,12 +18,12 @@ class LowerEqualToTest {
     }
 
     @Test
-    void evaluateTest() throws VariableException {
-        Assignment<Double> assignment = new Assignment<>();
+    void evaluateTest() {
+        Assignment assignment = new Assignment();
         assignment.put("X", -2.);
         BooleanDomain domain = new BooleanDomain();
 
-        DomainFunction<Boolean> compiledEqualTo = lowerEqualTo.evaluate(domain);
+        DomainFunction<Boolean> compiledEqualTo = lowerEqualTo.compile(domain);
 
         assertTrue(compiledEqualTo.evaluate(assignment));
     }

@@ -14,4 +14,9 @@ public class Atom implements STL {
     public String toString() {
         return expression.toString();
     }
+
+    @Override
+    public String toLogicString() {
+        return toString();
+    }
 }

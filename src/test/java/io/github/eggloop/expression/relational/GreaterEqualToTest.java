@@ -19,12 +19,12 @@ class GreaterEqualToTest {
     }
 
     @Test
-    void evaluateTest() throws VariableException {
-        Assignment<Double> assignment = new Assignment<>();
+    void evaluateTest() {
+        Assignment assignment = new Assignment();
         assignment.put("X", 1.);
         BooleanDomain domain = new BooleanDomain();
 
-        DomainFunction<Boolean> compiledEqualTo = greaterEqualTo.evaluate(domain);
+        DomainFunction<Boolean> compiledEqualTo = greaterEqualTo.compile(domain);
 
         assertTrue(compiledEqualTo.evaluate(assignment));
     }

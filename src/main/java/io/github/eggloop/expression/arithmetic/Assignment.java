@@ -3,7 +3,7 @@ package io.github.eggloop.expression.arithmetic;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Assignment<T> {
+public class Assignment {
 
     private Map<String, Double> assignment;
 
@@ -11,11 +11,7 @@ public class Assignment<T> {
         this.assignment = new HashMap<>();
     }
 
-    public boolean contains(String name) {
-        return assignment.containsKey(name);
-    }
-
-    public double get(String key) {
+    double get(String key) {
         return assignment.get(key);
     }
 

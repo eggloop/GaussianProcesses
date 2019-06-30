@@ -13,7 +13,7 @@ public class LowerThan implements RelationalExpression {
     }
 
     @Override
-    public DomainFunction evaluate(Domain domain) {
+    public DomainFunction compile(Domain domain) {
         return domain.lowerThan(left, right);
     }
 

@@ -3,7 +3,6 @@ package io.github.eggloop.expression.relational;
 import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
 import io.github.eggloop.expression.arithmetic.Assignment;
 import io.github.eggloop.expression.arithmetic.Variable;
-import io.github.eggloop.expression.arithmetic.VariableException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ class DoubleDomainTest {
     }
 
     @Test
-    void test1() throws VariableException {
+    void test1() {
         Assignment assignment = new Assignment();
         assignment.put("X", 10.);
         assignment.put("Y", 2.);
@@ -41,7 +40,7 @@ class DoubleDomainTest {
     }
 
     @Test
-    void test2() throws VariableException {
+    void test2() {
         Assignment assignment = new Assignment();
         assignment.put("X", 2.);
         assignment.put("Y", 10.);
@@ -54,7 +53,7 @@ class DoubleDomainTest {
     }
 
     @Test
-    void test3() throws VariableException {
+    void test3() {
         Assignment assignment = new Assignment();
         assignment.put("X", 2.);
         assignment.put("Y", 2.);
