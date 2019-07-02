@@ -1,8 +1,9 @@
 package io.github.eggloop.stl.syntax;
 
 import io.github.eggloop.expression.relational.RelationalExpression;
+import io.github.eggloop.stl.visitor.FormulaVisitor;
 
-public class Atom implements STL {
+public class Atom implements Formula {
 
     private RelationalExpression expression;
 
@@ -16,7 +17,7 @@ public class Atom implements STL {
     }
 
     @Override
-    public String toLogicString() {
-        return toString();
+    public <T> T accept(FormulaVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

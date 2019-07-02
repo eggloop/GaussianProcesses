@@ -1,10 +1,12 @@
 package io.github.eggloop.stl.syntax;
 
-public class Negation implements STL {
+import io.github.eggloop.stl.visitor.FormulaVisitor;
 
-    private STL argument;
+public class Negation implements Formula {
 
-    public Negation(STL argument) {
+    private Formula argument;
+
+    public Negation(Formula argument) {
         this.argument = argument;
     }
 
@@ -13,8 +15,17 @@ public class Negation implements STL {
         return SyntaxUtils.toStringUnaryFormula("!", argument.toString());
     }
 
-    @Override
+
     public String toLogicString() {
         return SyntaxUtils.toStringUnaryFormula("¬", argument.toString());
+    }
+
+    @Override
+    public <T> T accept(FormulaVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    public Formula getArgument() {
+        return argument;
     }
 }

@@ -1,14 +1,18 @@
 package io.github.eggloop.stl.visitor;
 
-import io.github.eggloop.stl.syntax.STL;
+import io.github.eggloop.stl.syntax.*;
 
-public interface FormulaVisitor {
+public interface FormulaVisitor<T> {
 
-    void negation(STL formula);
+    T visit(Negation formula);
 
-    void atom(STL formula);
+    T visit(Atom formula);
 
-    void disjunction(STL left, STL right);
+    T visit(Disjunction formula);
 
-    void conjunction(STL left, STL right);
+    T visit(Conjunction formula);
+
+    T visit(Finally formula);
+
+    T visit(Globally formula);
 }

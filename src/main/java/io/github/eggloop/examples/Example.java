@@ -8,7 +8,7 @@ import io.github.eggloop.expression.relational.GreaterEqualTo;
 import io.github.eggloop.expression.relational.RelationalExpression;
 import io.github.eggloop.stl.syntax.Atom;
 import io.github.eggloop.stl.syntax.Disjunction;
-import io.github.eggloop.stl.syntax.STL;
+import io.github.eggloop.stl.syntax.Formula;
 
 public class Example {
 
@@ -20,7 +20,7 @@ public class Example {
         RelationalExpression leftAtom = new GreaterEqualTo(X, C);
         RelationalExpression rightAtom = new GreaterEqualTo(X, Y);
 
-        STL formula = new Disjunction(new Atom(leftAtom), new Atom(rightAtom));
+        Formula formula = new Disjunction(new Atom(leftAtom), new Atom(rightAtom));
         BooleanDomain domain = new BooleanDomain();
     }
 

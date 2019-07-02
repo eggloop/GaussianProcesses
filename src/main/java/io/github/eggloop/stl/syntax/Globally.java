@@ -1,13 +1,27 @@
 package io.github.eggloop.stl.syntax;
 
-public class Globally {
+import io.github.eggloop.stl.visitor.FormulaVisitor;
+
+public class Globally implements Formula {
 
     private Interval interval;
-    private STL argument;
+    private Formula argument;
 
-    public Globally(Interval interval, STL argument) {
+    public Globally(Interval interval, Formula argument) {
         this.interval = interval;
         this.argument = argument;
     }
 
+    @Override
+    public <T> T accept(FormulaVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    public Interval getInterval() {
+        return interval;
+    }
+
+    public Formula getArgument() {
+        return argument;
+    }
 }

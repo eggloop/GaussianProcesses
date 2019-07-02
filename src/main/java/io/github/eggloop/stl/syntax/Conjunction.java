@@ -1,11 +1,13 @@
 package io.github.eggloop.stl.syntax;
 
-public class Conjunction implements STL {
+import io.github.eggloop.stl.visitor.FormulaVisitor;
 
-    private STL left;
-    private STL right;
+public class Conjunction implements Formula {
 
-    public Conjunction(STL left, STL right) {
+    private Formula left;
+    private Formula right;
+
+    public Conjunction(Formula left, Formula right) {
         this.left = left;
         this.right = right;
     }
@@ -15,8 +17,20 @@ public class Conjunction implements STL {
         return SyntaxUtils.toStringBinaryFormula(left.toString(), "&", right.toString());
     }
 
-    @Override
     public String toLogicString() {
         return SyntaxUtils.toStringBinaryFormula(left.toString(), "∧", right.toString());
+    }
+
+    @Override
+    public <T> T accept(FormulaVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    public Formula getLeft() {
+        return left;
+    }
+
+    public Formula getRight() {
+        return right;
     }
 }

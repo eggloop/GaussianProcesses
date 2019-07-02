@@ -10,5 +10,8 @@ public class Interval {
         this.right = right;
     }
 
-
+    @Override
+    public String toString() {
+        return "[" + left + "," + right + "]";
+    }
 }

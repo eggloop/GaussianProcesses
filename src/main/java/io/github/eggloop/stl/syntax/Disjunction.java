@@ -1,11 +1,13 @@
 package io.github.eggloop.stl.syntax;
 
-public class Disjunction implements STL {
+import io.github.eggloop.stl.visitor.FormulaVisitor;
 
-    private STL left;
-    private STL right;
+public class Disjunction implements Formula {
 
-    public Disjunction(STL left, STL right) {
+    private Formula left;
+    private Formula right;
+
+    public Disjunction(Formula left, Formula right) {
         this.left = left;
         this.right = right;
     }
@@ -15,9 +17,21 @@ public class Disjunction implements STL {
         return SyntaxUtils.toStringBinaryFormula(left.toString(), "|", right.toString());
     }
 
-    @Override
+
     public String toLogicString() {
         return SyntaxUtils.toStringBinaryFormula(left.toString(), "∨", right.toString());
     }
 
+    @Override
+    public <T> T accept(FormulaVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    public Formula getLeft() {
+        return left;
+    }
+
+    public Formula getRight() {
+        return right;
+    }
 }
