@@ -1,5 +1,6 @@
 package io.github.eggloop.stl.syntax;
 
+import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.visitor.FormulaVisitor;
 
 public class Negation implements Formula {
@@ -15,13 +16,8 @@ public class Negation implements Formula {
         return SyntaxUtils.toStringUnaryFormula("!", argument.toString());
     }
 
-
-    public String toLogicString() {
-        return SyntaxUtils.toStringUnaryFormula("¬", argument.toString());
-    }
-
     @Override
-    public <T> T accept(FormulaVisitor<T> visitor) {
+    public <T> DomainFunction<T> accept(FormulaVisitor<T> visitor) {
         return visitor.visit(this);
     }
 

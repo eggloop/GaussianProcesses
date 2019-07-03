@@ -12,8 +12,7 @@ class FormulaPrinterTest {
     void name() {
         FormulaPrinter printer = new FormulaPrinter(new LogicOperatorToken());
         Formula prova = new Negation(new Finally(new Interval(1, 2), new Negation(new Atom(new GreaterEqualTo(new Variable("X"), new Constant(5))))));
-
-        String accept = prova.accept(printer);
+        String accept = prova.accept(printer).evaluate(null);
         System.out.println(accept);
     }
 }

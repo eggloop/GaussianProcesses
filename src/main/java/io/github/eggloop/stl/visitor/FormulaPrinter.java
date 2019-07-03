@@ -1,5 +1,6 @@
 package io.github.eggloop.stl.visitor;
 
+import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 
 public class FormulaPrinter implements FormulaVisitor<String> {
@@ -11,32 +12,37 @@ public class FormulaPrinter implements FormulaVisitor<String> {
     }
 
     @Override
-    public String visit(Negation formula) {
-        return SyntaxUtils.toStringUnaryFormula(operatorToken.negation(), formula.getArgument().accept(this));
+    public DomainFunction<String> visit(Negation formula) {
+        return assignment -> SyntaxUtils.toStringUnaryFormula(operatorToken.negation(), formula.getArgument().accept(this).evaluate(assignment));
     }
 
     @Override
-    public String visit(Atom formula) {
-        return formula.toString();
+    public DomainFunction<String> visit(Atom formula) {
+        return assignment -> formula.toString(); //TODO
     }
 
     @Override
-    public String visit(Disjunction formula) {
-        return SyntaxUtils.toStringBinaryFormula(formula.getLeft().accept(this), operatorToken.disjunction(), formula.getRight().accept(this));
+    public DomainFunction<String> visit(Disjunction formula) {
+        return assignment -> SyntaxUtils.toStringBinaryFormula(formula.getLeft().accept(this).evaluate(assignment), operatorToken.disjunction(), formula.getRight().accept(this).evaluate(assignment));
     }
 
     @Override
-    public String visit(Conjunction formula) {
-        return SyntaxUtils.toStringBinaryFormula(formula.getLeft().accept(this), operatorToken.conjunction(), formula.getRight().accept(this));
+    public DomainFunction<String> visit(Conjunction formula) {
+        return assignment -> SyntaxUtils.toStringBinaryFormula(formula.getLeft().accept(this).evaluate(assignment), operatorToken.conjunction(), formula.getRight().accept(this).evaluate(assignment));
     }
 
     @Override
-    public String visit(Finally formula) {
-        return "F_" + formula.getInterval().toString() + formula.getArgument().accept(this);
+    public DomainFunction<String> visit(Finally formula) {
+        return assignment -> "F_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
     }
 
     @Override
-    public String visit(Globally formula) {
-        return "G_" + formula.getInterval().toString() + formula.getArgument().accept(this);
+    public DomainFunction<String> visit(Globally formula) {
+        return assignment -> "G_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
+    }
+
+    @Override
+    public DomainFunction<String> visit(Historically formula) {
+        return assignment -> "H_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
     }
 }

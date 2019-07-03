@@ -1,18 +1,21 @@
 package io.github.eggloop.stl.visitor;
 
+import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 
 public interface FormulaVisitor<T> {
 
-    T visit(Negation formula);
+    DomainFunction<T> visit(Negation formula);
 
-    T visit(Atom formula);
+    DomainFunction<T> visit(Atom formula);
 
-    T visit(Disjunction formula);
+    DomainFunction<T> visit(Disjunction formula);
 
-    T visit(Conjunction formula);
+    DomainFunction<T> visit(Conjunction formula);
 
-    T visit(Finally formula);
+    DomainFunction<T> visit(Finally formula);
 
-    T visit(Globally formula);
+    DomainFunction<T> visit(Globally formula);
+
+    DomainFunction<T> visit(Historically formula);
 }

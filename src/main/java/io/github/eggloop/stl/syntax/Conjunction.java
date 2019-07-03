@@ -1,5 +1,6 @@
 package io.github.eggloop.stl.syntax;
 
+import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.visitor.FormulaVisitor;
 
 public class Conjunction implements Formula {
@@ -17,12 +18,8 @@ public class Conjunction implements Formula {
         return SyntaxUtils.toStringBinaryFormula(left.toString(), "&", right.toString());
     }
 
-    public String toLogicString() {
-        return SyntaxUtils.toStringBinaryFormula(left.toString(), "∧", right.toString());
-    }
-
     @Override
-    public <T> T accept(FormulaVisitor<T> visitor) {
+    public <T> DomainFunction<T> accept(FormulaVisitor<T> visitor) {
         return visitor.visit(this);
     }
 

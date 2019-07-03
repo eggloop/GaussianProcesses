@@ -1,19 +1,19 @@
 package io.github.eggloop.stl.visitor;
 
-public class LogicOperatorToken implements OperatorToken {
+public class StandardOperatorToken implements OperatorToken {
 
     @Override
     public String conjunction() {
-        return "∧";
+        return "/\\";
     }
 
     @Override
     public String disjunction() {
-        return "∨";
+        return "\\/";
     }
 
     @Override
     public String negation() {
-        return "¬";
+        return "!";
     }
 }
