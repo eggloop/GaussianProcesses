@@ -1,7 +1,9 @@
 package io.github.eggloop.expression.arithmetic;
 
+import io.github.eggloop.expression.relational.DomainFunction;
+
 public interface ArithmeticExpression {
 
-    AssignmentFunction compile();
+    DomainFunction<Double> compile();
 
 }

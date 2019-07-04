@@ -1,6 +1,7 @@
 package io.github.eggloop.expression;
 
 import io.github.eggloop.expression.arithmetic.*;
+import io.github.eggloop.expression.relational.DomainFunction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ class SubtractionTest {
         assignment.put("Y", 2.);
 
         ArithmeticExpression addition = new Subtraction(new Variable("X"), new Variable("Y"));
-        AssignmentFunction compiledAddition = addition.compile();
+        DomainFunction<Double> compiledAddition = addition.compile();
 
         assertEquals(-1., compiledAddition.evaluate(assignment));
     }

@@ -1,6 +1,7 @@
 package io.github.eggloop.expression;
 
 import io.github.eggloop.expression.arithmetic.*;
+import io.github.eggloop.expression.relational.DomainFunction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +15,7 @@ class VariableTest {
         assignment.put("X", 1.);
 
         ArithmeticExpression addition = new Variable("X");
-        AssignmentFunction compiledAddition = addition.compile();
+        DomainFunction<Double> compiledAddition = addition.compile();
 
         assertEquals(1., compiledAddition.evaluate(assignment));
     }
@@ -25,7 +26,7 @@ class VariableTest {
         assignment.put("Y", 1.);
 
         ArithmeticExpression addition = new Variable("X");
-        AssignmentFunction compiledAddition = addition.compile();
+        DomainFunction<Double> compiledAddition = addition.compile();
 
 //        VariableException variableException = assertThrows(VariableException.class, () -> compiledAddition.compile(assignment));
 

@@ -1,17 +1,29 @@
 package io.github.eggloop.stl.syntax;
 
-public class Interval {
+import io.github.eggloop.expression.arithmetic.Parameter;
+import io.github.eggloop.expression.relational.DomainFunction;
+import io.github.eggloop.stl.visitor.FormulaVisitor;
 
-    private double left;
-    private double right;
+public class Interval implements Formula {
 
-    public Interval(double left, double right) {
+    private Parameter left;
+    private Parameter right;
+
+    public Interval(Parameter left, Parameter right) {
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public String toString() {
-        return "[" + left + "," + right + "]";
+    public <T> DomainFunction<T> accept(FormulaVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    public Parameter getLeft() {
+        return left;
+    }
+
+    public Parameter getRight() {
+        return right;
     }
 }

@@ -1,5 +1,7 @@
 package io.github.eggloop.expression.arithmetic;
 
+import io.github.eggloop.expression.relational.DomainFunction;
+
 public class Addition implements ArithmeticExpression {
 
     private ArithmeticExpression left;
@@ -11,7 +13,7 @@ public class Addition implements ArithmeticExpression {
     }
 
     @Override
-    public AssignmentFunction compile() {
+    public DomainFunction<Double> compile() {
         return assignment -> left.compile().evaluate(assignment) + right.compile().evaluate(assignment);
     }
 }

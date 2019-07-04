@@ -1,5 +1,6 @@
 package io.github.eggloop.stl.visitor;
 
+import io.github.eggloop.expression.arithmetic.Parameter;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 
@@ -18,4 +19,10 @@ public interface FormulaVisitor<T> {
     DomainFunction<T> visit(Globally formula);
 
     DomainFunction<T> visit(Historically formula);
+
+    DomainFunction<T> visit(Interval formula);
+
+    DomainFunction<T> visit(Parameter formula);
+
+
 }

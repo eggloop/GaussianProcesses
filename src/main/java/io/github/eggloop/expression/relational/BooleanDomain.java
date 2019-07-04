@@ -26,6 +26,6 @@ public class BooleanDomain implements Domain<Boolean> {
 
     @Override
     public DomainFunction<Boolean> equalTo(ArithmeticExpression left, ArithmeticExpression right) {
-        return assignment -> left.compile().evaluate(assignment) == right.compile().evaluate(assignment);
+        return assignment -> left.compile().evaluate(assignment).equals(right.compile().evaluate(assignment));
     }
 }
