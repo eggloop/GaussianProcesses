@@ -10,8 +10,18 @@ import org.junit.jupiter.api.Test;
 class FormulaPrinterTest {
 
     @Test
-    void name() {
-        FormulaPrinter printer = new FormulaPrinter(new LogicOperatorToken());
+    void testLogicOperatorToken() {
+        FormulaVisitor<String> printer = new FormulaPrinter(new LogicOperatorToken());
+        Formula prova = new Negation(new Finally(new Interval(new Variable("p"), new Constant(2)), new Negation(new Atom(new GreaterEqualTo(new Variable("X"), new Constant(5))))));
+        Assignment assignment = new Assignment();
+        //assignment.put("p", 10);
+        String accept = prova.accept(printer).evaluate(assignment);
+        System.out.println(accept);
+    }
+
+    @Test
+    void testStandardOperatorToken() {
+        FormulaVisitor<String> printer = new FormulaPrinter(new StandardOperatorToken());
         Formula prova = new Negation(new Finally(new Interval(new Variable("A"), new Constant(2)), new Negation(new Atom(new GreaterEqualTo(new Variable("X"), new Constant(5))))));
         Assignment assignment = new Assignment();
         assignment.put("A", 10);

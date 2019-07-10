@@ -3,8 +3,6 @@ package io.github.eggloop.stl.syntax;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.visitor.FormulaVisitor;
 
-import java.util.function.Supplier;
-
 public class Historically implements Formula {
 
     private Interval interval;
@@ -17,7 +15,7 @@ public class Historically implements Formula {
 
     @Override
     public <T> DomainFunction<T> accept(FormulaVisitor<T> visitor) {
-        return  visitor.visit(this);
+        return visitor.visit(this);
     }
 
     public Interval getInterval() {

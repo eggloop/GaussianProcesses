@@ -1,6 +1,6 @@
 package io.github.eggloop.expression.relational;
 
-public interface RelationalExpression<T> {
+public interface RelationalExpression {
 
-    DomainFunction<T> compile(Domain<T> domain);
+    <T> DomainFunction<T> compile(Domain<T> domain);
 }

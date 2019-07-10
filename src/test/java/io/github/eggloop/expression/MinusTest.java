@@ -13,8 +13,8 @@ class MinusTest {
         Assignment assignment = new Assignment();
         assignment.put("X", 1.);
 
-        ArithmeticExpression addition = new Minus(new Variable("X"));
-        DomainFunction<Double> compiledFormula = addition.compile();
+        ArithmeticExpression minus = new Minus(new Variable("X"));
+        DomainFunction<Double> compiledFormula = minus.compile();
 
         assertEquals(-1., compiledFormula.evaluate(assignment));
     }

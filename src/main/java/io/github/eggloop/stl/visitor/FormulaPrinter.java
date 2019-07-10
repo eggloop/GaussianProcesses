@@ -34,7 +34,11 @@ public class FormulaPrinter implements FormulaVisitor<String> {
 
     @Override
     public DomainFunction<String> visit(Finally formula) {
-        return assignment -> "F_" + formula.getInterval().accept(this).evaluate(assignment) + formula.getArgument().accept(this).evaluate(assignment);
+        return assignment -> {
+            Interval interval = formula.getInterval();
+            String intervalToString = "[" + interval.getLeft().accept(this).evaluate(assignment) + "," + interval.getRight().accept(this).evaluate(assignment) + "]";
+            return "F_" + intervalToString + formula.getArgument().accept(this).evaluate(assignment);
+        };
     }
 
     @Override
@@ -45,11 +49,6 @@ public class FormulaPrinter implements FormulaVisitor<String> {
     @Override
     public DomainFunction<String> visit(Historically formula) {
         return assignment -> "H_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
-    }
-
-    @Override
-    public DomainFunction<String> visit(Interval formula) {
-        return assignment -> "[" + formula.getLeft().accept(this).evaluate(assignment) + "," + formula.getRight().accept(this).evaluate(assignment) + "]";
     }
 
     @Override

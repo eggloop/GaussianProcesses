@@ -21,4 +21,8 @@ public class Atom implements Formula {
     public <T> DomainFunction<T> accept(FormulaVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
+    public RelationalExpression getExpression() {
+        return expression;
+    }
 }

@@ -20,8 +20,6 @@ public interface FormulaVisitor<T> {
 
     DomainFunction<T> visit(Historically formula);
 
-    DomainFunction<T> visit(Interval formula);
-
     DomainFunction<T> visit(Parameter formula);
 
 
