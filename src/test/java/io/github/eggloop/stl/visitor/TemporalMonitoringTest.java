@@ -11,26 +11,25 @@ import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 class TemporalMonitoringTest {
 
     @Test
     void name() throws ParseException {
-        Formula prova = new Atom(new GreaterEqualTo(new Variable("X"),new Variable("k")));
+        Formula prova = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k")));
         String actualJSON = "{\"variables\":[\"X\",\"Y\"],\"values\":[[1.0,2.0],[2.0,3.0]],\"time\":[1.0,2.0]}";
 
         Trajectory actualTrajectory = TrajectoryFactory.fromJSON(actualJSON);
-        DoubleTemporalMonitoring monitoring = new DoubleTemporalMonitoring(actualTrajectory);
+        BooleanTemporalMonitoring monitoring = new BooleanTemporalMonitoring(actualTrajectory);
 
-        Function<Double,Assignment> ass = value -> {
+        Function<Double, Assignment> ass = value -> {
             Assignment assignment = new Assignment();
-            assignment.put("k",value);
+            assignment.put("k", value);
             return assignment;
         };
 
-        UnaryOperator<Double> eval = value -> prova.accept(monitoring).evaluate(ass.apply(value));
-        System.out.println(eval.apply(10.));
+        Function<Double, Boolean> eval = value -> prova.accept(monitoring).evaluate(ass.apply(value));
+        System.out.println(eval.apply(1.001));
         System.out.println(eval.apply(9.));
         System.out.println(eval.apply(8.));
         System.out.println(eval.apply(10.));

@@ -28,4 +28,18 @@ public class BooleanDomain implements Domain<Boolean> {
     public DomainFunction<Boolean> equalTo(ArithmeticExpression left, ArithmeticExpression right) {
         return assignment -> left.compile().evaluate(assignment).equals(right.compile().evaluate(assignment));
     }
+
+    public Boolean conjunction(Boolean left, Boolean right) {
+        return left && right;
+    }
+
+    @Override
+    public Boolean disjunction(Boolean left, Boolean right) {
+        return left || right;
+    }
+
+    @Override
+    public Boolean negation(Boolean argument) {
+        return !argument;
+    }
 }

@@ -12,4 +12,10 @@ public interface Domain<T> {
     DomainFunction<T> greaterThan(ArithmeticExpression left, ArithmeticExpression right);
 
     DomainFunction<T> equalTo(ArithmeticExpression left, ArithmeticExpression right);
+
+    T conjunction(T left, T right);
+
+    T disjunction(T left, T right);
+
+    T negation(T argument);
 }

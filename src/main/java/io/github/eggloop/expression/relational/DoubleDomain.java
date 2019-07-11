@@ -28,4 +28,19 @@ public class DoubleDomain implements Domain<Double> {
     public DomainFunction<Double> equalTo(ArithmeticExpression left, ArithmeticExpression right) {
         return assignment -> 0. - Math.abs(left.compile().evaluate(assignment) - right.compile().evaluate(assignment));
     }
+
+    @Override
+    public Double conjunction(Double left, Double right) {
+        return Math.min(left,right);
+    }
+
+    @Override
+    public Double disjunction(Double left, Double right) {
+        return Math.max(left,right);
+    }
+
+    @Override
+    public Double negation(Double argument) {
+        return -argument;
+    }
 }
