@@ -61,14 +61,4 @@ public class DoubleTemporalMonitoring implements FormulaVisitor<Double> {
         return null;
     }
 
-    @Override
-    public DomainFunction<Double> visit(Historically formula) {
-        return null;
-    }
-
-    @Override
-    public DomainFunction<Double> visit(Parameter formula) {
-        return null;
-    }
-
 }

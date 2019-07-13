@@ -7,6 +7,8 @@ import io.github.eggloop.expression.relational.GreaterEqualTo;
 import io.github.eggloop.stl.syntax.*;
 import org.junit.jupiter.api.Test;
 
+//FIXME
+//TODO
 class FormulaPrinterTest {
 
     @Test
@@ -14,7 +16,7 @@ class FormulaPrinterTest {
         FormulaVisitor<String> printer = new FormulaPrinter(new LogicOperatorToken());
         Formula prova = new Negation(new Finally(new Interval(new Variable("p"), new Constant(2)), new Negation(new Atom(new GreaterEqualTo(new Variable("X"), new Constant(5))))));
         Assignment assignment = new Assignment();
-        //assignment.put("p", 10);
+        assignment.put("p", 1);
         String accept = prova.accept(printer).evaluate(assignment);
         System.out.println(accept);
     }

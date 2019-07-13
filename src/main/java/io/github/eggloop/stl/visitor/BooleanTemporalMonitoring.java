@@ -1,19 +1,27 @@
 package io.github.eggloop.stl.visitor;
 
-import io.github.eggloop.expression.arithmetic.Parameter;
 import io.github.eggloop.expression.relational.BooleanDomain;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 import io.github.eggloop.trajectories.Trajectory;
 
+import java.util.OptionalInt;
+import java.util.function.IntPredicate;
+import java.util.stream.IntStream;
+
 public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
 
     private static final BooleanDomain DOMAIN = new BooleanDomain();
     private Trajectory trajectory;
-    private int currentState = 0;
+    private int currentState;
 
     public BooleanTemporalMonitoring(Trajectory trajectory) {
+        this(trajectory, 0);
+    }
+
+    private BooleanTemporalMonitoring(Trajectory trajectory, int currentState) {
         this.trajectory = trajectory;
+        this.currentState = currentState;
     }
 
     @Override
@@ -29,7 +37,6 @@ public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
             }
             return formula.getExpression().compile(DOMAIN).evaluate(assignment);
         };
-
     }
 
     @Override
@@ -53,7 +60,15 @@ public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
 
     @Override
     public DomainFunction<Boolean> visit(Finally formula) {
-        return null;
+        return assignment -> {
+            double[] times = trajectory.getTimes();
+            double leftInterval = formula.getInterval().getLeft().compile().evaluate(assignment);
+            double rightInterval = formula.getInterval().getRight().compile().evaluate(assignment);
+            IntPredicate predicate = i -> formula.getArgument().accept(new BooleanTemporalMonitoring(trajectory, i)).evaluate(assignment);
+            IntPredicate time = i -> (times[i] > leftInterval && times[i] < rightInterval);
+            OptionalInt first = IntStream.range(0, times.length).filter(time.and(predicate)).findFirst();
+            return first.isPresent();
+        };
     }
 
     @Override
@@ -61,14 +76,10 @@ public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
         return null;
     }
 
-    @Override
-    public DomainFunction<Boolean> visit(Historically formula) {
-        return null;
-    }
 
-    @Override
-    public DomainFunction<Boolean> visit(Parameter formula) {
-        return null;
-    }
+//    @Override
+//    public DomainFunction<Boolean> visit(Parameter formula) {
+//        return null;
+//    }
 
 }

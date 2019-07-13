@@ -1,22 +1,23 @@
 package io.github.eggloop.stl.syntax;
 
+import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
 import io.github.eggloop.expression.arithmetic.Parameter;
 
 public class Interval {
 
-    private Parameter left;
-    private Parameter right;
+    private ArithmeticExpression left;
+    private ArithmeticExpression right;
 
-    public Interval(Parameter left, Parameter right) {
+    public Interval(ArithmeticExpression left, ArithmeticExpression right) {
         this.left = left;
         this.right = right;
     }
 
-    public Parameter getLeft() {
+    public ArithmeticExpression getLeft() {
         return left;
     }
 
-    public Parameter getRight() {
+    public ArithmeticExpression getRight() {
         return right;
     }
 }

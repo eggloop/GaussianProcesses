@@ -1,6 +1,5 @@
 package io.github.eggloop.stl.visitor;
 
-import io.github.eggloop.expression.arithmetic.Parameter;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 
@@ -36,7 +35,7 @@ public class FormulaPrinter implements FormulaVisitor<String> {
     public DomainFunction<String> visit(Finally formula) {
         return assignment -> {
             Interval interval = formula.getInterval();
-            String intervalToString = "[" + interval.getLeft().accept(this).evaluate(assignment) + "," + interval.getRight().accept(this).evaluate(assignment) + "]";
+            String intervalToString = "[" + interval.getLeft().compile().evaluate(assignment) + "," + interval.getRight().compile().evaluate(assignment) + "]";
             return "F_" + intervalToString + formula.getArgument().accept(this).evaluate(assignment);
         };
     }
@@ -44,16 +43,6 @@ public class FormulaPrinter implements FormulaVisitor<String> {
     @Override
     public DomainFunction<String> visit(Globally formula) {
         return assignment -> "G_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
-    }
-
-    @Override
-    public DomainFunction<String> visit(Historically formula) {
-        return assignment -> "H_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
-    }
-
-    @Override
-    public DomainFunction<String> visit(Parameter formula) {
-        return formula.print();
     }
 
 }
