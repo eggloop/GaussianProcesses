@@ -1,6 +1,5 @@
 package io.github.eggloop.stl.visitor;
 
-import io.github.eggloop.expression.arithmetic.Parameter;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.expression.relational.DoubleDomain;
 import io.github.eggloop.stl.syntax.*;

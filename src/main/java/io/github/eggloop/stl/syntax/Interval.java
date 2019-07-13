@@ -1,7 +1,6 @@
 package io.github.eggloop.stl.syntax;
 
 import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
-import io.github.eggloop.expression.arithmetic.Parameter;
 
 public class Interval {
 

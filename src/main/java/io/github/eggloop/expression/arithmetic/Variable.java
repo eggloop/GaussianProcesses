@@ -1,7 +1,6 @@
 package io.github.eggloop.expression.arithmetic;
 
 import io.github.eggloop.expression.relational.DomainFunction;
-import io.github.eggloop.stl.visitor.FormulaVisitor;
 
 public class Variable implements ArithmeticExpression {
 
@@ -21,13 +20,13 @@ public class Variable implements ArithmeticExpression {
         return name;
     }
 
-
-    public DomainFunction<String> print() {
-        return assignment -> {
-            if (assignment.contains(name)) {
-                return name + "[" + assignment.get(name) + "]";
-            }
-            return name;
-        };
-    }
+//TODO
+//    public DomainFunction<String> print() {
+//        return assignment -> {
+//            if (assignment.contains(name)) {
+//                return name + "[" + assignment.get(name) + "]";
+//            }
+//            return name;
+//        };
+//    }
 }

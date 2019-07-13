@@ -29,6 +29,7 @@ public class BooleanDomain implements Domain<Boolean> {
         return assignment -> left.compile().evaluate(assignment).equals(right.compile().evaluate(assignment));
     }
 
+    @Override
     public Boolean conjunction(Boolean left, Boolean right) {
         return left && right;
     }
