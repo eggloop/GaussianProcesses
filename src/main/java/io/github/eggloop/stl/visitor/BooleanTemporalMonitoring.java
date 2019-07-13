@@ -73,13 +73,14 @@ public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
 
     @Override
     public DomainFunction<Boolean> visit(Globally formula) {
-        return null;
+        return assignment -> {
+            double[] times = trajectory.getTimes();
+            double leftInterval = formula.getInterval().getLeft().compile().evaluate(assignment);
+            double rightInterval = formula.getInterval().getRight().compile().evaluate(assignment);
+            IntPredicate predicate = i -> formula.getArgument().accept(new BooleanTemporalMonitoring(trajectory, i)).evaluate(assignment);
+            IntPredicate time = i -> (times[i] > leftInterval && times[i] < rightInterval);
+            OptionalInt first = IntStream.range(0, times.length).filter(time.and(predicate.negate())).findFirst();
+            return !first.isPresent();
+        };
     }
-
-
-//    @Override
-//    public DomainFunction<Boolean> visit(Parameter formula) {
-//        return null;
-//    }
-
 }
