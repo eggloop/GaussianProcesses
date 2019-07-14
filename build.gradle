@@ -24,6 +24,13 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
+jar {
+    archiveName "$baseName.$extension"
+    manifest{
+        attributes 'Main-Class': 'io.github.eggloop.application.Eggloop'
+    }
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
