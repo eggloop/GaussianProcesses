@@ -22,6 +22,17 @@ class FormulaPrinterTest {
     }
 
     @Test
+    void testLogicOperatorToken2() {
+        FormulaVisitor<String> printer = new FormulaPrinter(new LogicOperatorToken());
+        Formula prova = new Negation(new Finally(new Interval(new Variable("p"), new Constant(2)), new Negation(new Atom(new GreaterEqualTo(new Variable("X"), new Variable("q"))))));
+        Assignment assignment = new Assignment();
+        assignment.put("p", 1);
+        assignment.put("q", 1);
+        String accept = prova.accept(printer).evaluate(assignment);
+        System.out.println(accept);
+    }
+
+    @Test
     void testStandardOperatorToken() {
         FormulaVisitor<String> printer = new FormulaPrinter(new StandardOperatorToken());
         Formula prova = new Negation(new Finally(new Interval(new Variable("A"), new Constant(2)), new Negation(new Atom(new GreaterEqualTo(new Variable("X"), new Constant(5))))));

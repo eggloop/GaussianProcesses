@@ -1,6 +1,7 @@
 package io.github.eggloop.expression.relational;
 
 import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
+import io.github.eggloop.expression.arithmetic.Assignment;
 
 public class EqualTo implements RelationalExpression {
 
