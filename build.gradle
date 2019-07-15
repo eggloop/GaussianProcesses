@@ -15,6 +15,7 @@ repositories {
 test {
     useJUnitPlatform()
 }
+
 dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     compile group: 'org.apache.commons.io', name: 'commonsIO', version: '2.5.0'
@@ -25,10 +26,14 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
+
 jar {
     archiveName "eggloop.$extension"
     manifest{
         attributes 'Main-Class': 'io.github.eggloop.application.Eggloop'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

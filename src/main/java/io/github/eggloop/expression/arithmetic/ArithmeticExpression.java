@@ -6,4 +6,7 @@ public interface ArithmeticExpression {
 
     DomainFunction<Double> compile();
 
+    DomainFunction<String> print();
+
+
 }

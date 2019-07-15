@@ -18,7 +18,7 @@ public class FormulaPrinter implements FormulaVisitor<String> {
 
     @Override
     public DomainFunction<String> visit(Atom formula) {
-        return assignment -> formula.toString(); //TODO
+        return assignment -> formula.getExpression().print().evaluate(assignment);
     }
 
     @Override
@@ -42,7 +42,12 @@ public class FormulaPrinter implements FormulaVisitor<String> {
 
     @Override
     public DomainFunction<String> visit(Globally formula) {
-        return assignment -> "G_" + formula.getInterval().toString() + formula.getArgument().accept(this).evaluate(assignment);
+        return assignment -> {
+            Interval interval = formula.getInterval();
+            String intervalToString = "[" + interval.getLeft().compile().evaluate(assignment) + "," + interval.getRight().compile().evaluate(assignment) + "]";
+            return "G_" + intervalToString + formula.getArgument().accept(this).evaluate(assignment);
+        };
+
     }
 
 }

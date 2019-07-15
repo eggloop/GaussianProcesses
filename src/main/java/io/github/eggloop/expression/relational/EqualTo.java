@@ -19,7 +19,7 @@ public class EqualTo implements RelationalExpression {
     }
 
     @Override
-    public String toString() {
-        return left.toString() + " == " + right.toString();
+    public DomainFunction<String> print() {
+        return assignment -> left.print().evaluate(assignment)+ " == " + right.print().evaluate(assignment);
     }
 }

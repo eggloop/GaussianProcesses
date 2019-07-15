@@ -16,4 +16,9 @@ public class Subtraction implements ArithmeticExpression {
     public DomainFunction<Double> compile() {
         return assignment -> left.compile().evaluate(assignment) - right.compile().evaluate(assignment);
     }
+
+    @Override
+    public DomainFunction<String> print() {
+        return assignment -> left.compile().evaluate(assignment) + " - " + right.compile().evaluate(assignment);
+    }
 }

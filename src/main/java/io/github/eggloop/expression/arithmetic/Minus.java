@@ -14,4 +14,9 @@ public class Minus implements ArithmeticExpression {
     public DomainFunction<Double> compile() {
         return assignment -> -argument.compile().evaluate(assignment);
     }
+
+    @Override
+    public DomainFunction<String> print() {
+        return assignment -> " - " + argument.print().evaluate(assignment);
+    }
 }

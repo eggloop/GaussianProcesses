@@ -16,6 +16,11 @@ public class Constant implements ArithmeticExpression {
     }
 
     @Override
+    public DomainFunction<String> print() {
+        return assignment -> String.valueOf(value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

@@ -20,13 +20,14 @@ public class Variable implements ArithmeticExpression {
         return name;
     }
 
-//TODO
-//    public DomainFunction<String> print() {
-//        return assignment -> {
-//            if (assignment.contains(name)) {
-//                return name + "[" + assignment.get(name) + "]";
-//            }
-//            return name;
-//        };
-//    }
+
+    public DomainFunction<String> print() {
+        return assignment -> {
+            if (assignment.contains(name)) {
+                return String.valueOf(assignment.get(name));
+                //return name + "[" + assignment.get(name) + "]";
+            }
+            return name;
+        };
+    }
 }
