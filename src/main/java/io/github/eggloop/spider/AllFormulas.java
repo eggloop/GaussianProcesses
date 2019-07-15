@@ -34,7 +34,7 @@ public class AllFormulas {
         String jsonTrajectory = FileUtils.readFileToString(inputLocationOfTrajectories);
         Trajectory trajectory = TrajectoryFactory.fromJSON(jsonTrajectory);
         double[] times = trajectory.getTimes();
-        double[] space = IntStream.range(-1, 20).mapToDouble(s -> 0.1 * s).toArray();
+        double[] space = IntStream.range(-8, 18).mapToDouble(s -> 0.1 * s).toArray();
 
         List<double[]> spaceIntervals = new ArrayList<>();
         for (int i = 0; i < space.length; i++) {
