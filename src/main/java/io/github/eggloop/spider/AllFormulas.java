@@ -25,9 +25,12 @@ import java.util.stream.IntStream;
 
 public class AllFormulas {
 
-    public static void getTrajectory(String inputLocation, String outputLocation) throws IOException, ParseException {
-        StringBuilder stringBuilder = new StringBuilder();
-        String jsonTrajectory = FileUtils.readFileToString(inputLocation);
+    private AllFormulas() {
+        //utility class
+    }
+
+    public static void getTrajectory(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
+        String jsonTrajectory = FileUtils.readFileToString(inputLocationOfTrajectories);
         Trajectory trajectory = TrajectoryFactory.fromJSON(jsonTrajectory);
         double[] times = trajectory.getTimes();
         double[] space = IntStream.range(-1, 3).mapToDouble(s -> 0.1 * s).toArray();
@@ -41,8 +44,9 @@ public class AllFormulas {
         BooleanTemporalMonitoring booleanTemporalMonitoring = new BooleanTemporalMonitoring(trajectory);
         FormulaPrinter formulaPrinter = new FormulaPrinter(new LogicOperatorToken());
 
-        Formula provaf = new Finally(new Interval(new Variable("a"), new Variable("b")), new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k"))));
-        Formula provag = new Globally(new Interval(new Variable("a"), new Variable("b")), new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k"))));
+        Formula eventuallyFormula = new Finally(new Interval(new Variable("a"), new Variable("b")), new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k"))));
+        Formula globallyFormula = new Globally(new Interval(new Variable("a"), new Variable("b")), new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k"))));
+
 
         Function<double[], Assignment> ass = value -> {
             Assignment assignment = new Assignment();
@@ -53,9 +57,11 @@ public class AllFormulas {
         };
 
 
-        Predicate<double[]> eval = value -> provag.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
-        getString(stringBuilder, space, intervals, formulaPrinter, provag, ass, eval);
-        getString(stringBuilder, space, intervals, formulaPrinter, provaf, ass, eval);
+        Predicate<double[]> globallyChecker = value -> globallyFormula.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
+        Predicate<double[]> eventuallyChecker = value -> eventuallyFormula.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
+        StringBuilder stringBuilder = new StringBuilder();
+        getString(stringBuilder, space, intervals, formulaPrinter, globallyFormula, ass, globallyChecker);
+        getString(stringBuilder, space, intervals, formulaPrinter, eventuallyFormula, ass, eventuallyChecker);
         Path path = Paths.get(outputLocation);
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(stringBuilder.toString());
