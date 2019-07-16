@@ -30,65 +30,63 @@ public class AllFormulas {
         //utility class
     }
 
+    private static List<double[]> generateIntervals(double[] array) {
+        List<double[]> spaceIntervals = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+            double left = array[i];
+            for (int j = i+1; j < array.length; j++) {
+                spaceIntervals.add(new double[]{left, array[j]});
+            }
+        }
+        return spaceIntervals;
+    }
+
     public static void getTrajectory(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
         String jsonTrajectory = FileUtils.readFileToString(inputLocationOfTrajectories);
         Trajectory trajectory = TrajectoryFactory.fromJSON(jsonTrajectory);
         double[] times = trajectory.getTimes();
         double[] space = IntStream.range(-8, 18).mapToDouble(s -> 0.1 * s).toArray();
 
-        List<double[]> spaceIntervals = new ArrayList<>();
-        for (int i = 0; i < space.length; i++) {
-            double initSpace = space[i];
-            for (int j = i; j < times.length; j++) {
-                spaceIntervals.add(new double[]{initSpace, space[j]});
-            }
-        }
+        List<double[]> spaceIntervals = generateIntervals(space);
+        List<double[]> intervals = generateIntervals(times);
+
+//        List<double[]> intervals = new ArrayList<>();
+//        for (int i = 0; i < times.length; i++) {
+//            double initTime = times[i];
+//            for (int j = i + 2; j < times.length; j++) {
+//                intervals.add(new double[]{initTime, times[j]});
+//            }
+//        }
 
 
-
-        List<double[]> intervals = new ArrayList<>();
-        for (int i = 0; i < times.length; i++) {
-            double initTime = times[i];
-            for (int j = i+2; j < times.length; j++) {
-                intervals.add(new double[]{initTime, times[j]});
-            }
-        }
         BooleanTemporalMonitoring booleanTemporalMonitoring = new BooleanTemporalMonitoring(trajectory);
         FormulaPrinter formulaPrinter = new FormulaPrinter(new LogicOperatorToken());
 
 
         Formula atoml = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
         Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
-        Formula prova = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction( atoml, atomh));
-        Formula provaf = new Finally(new Interval(new Variable("a"), new Variable("b")), atoml);
-        Formula provag = new Globally(new Interval(new Variable("a"), new Variable("b")),atoml );
-
-        /*Formula eventuallyFormula = new Finally(new Interval(new Variable("a"), new Variable("b")), new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k"))));
-        Formula globallyFormula = new Globally(new Interval(new Variable("a"), new Variable("b")), new Atom(new GreaterEqualTo(new Variable("X"), new Variable("k"))));
-*/
+        Formula aFinally = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
+        Formula aGlobally = new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
 
         Function<double[], Assignment> ass = value -> {
             Assignment assignment = new Assignment();
             assignment.put("h", value[0]);
             assignment.put("l", value[1]);
             assignment.put("a", value[2]);
-            assignment.put("b", value[4]);
+            assignment.put("b", value[3]);
             return assignment;
         };
 
 
-
-        Predicate<double[]> eval = value -> prova.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
+        Predicate<double[]> finallycheck = value -> aFinally.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
+        Predicate<double[]> globallycheck = value -> aGlobally.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
         StringBuilder stringBuilder = new StringBuilder();
-        getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, prova, ass, eval);
-        //getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, provaf, ass, eval);
+        long init = System.currentTimeMillis();
+        getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, aFinally, ass, finallycheck);
+        getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, aGlobally, ass, globallycheck);
+        long total = System.currentTimeMillis()-init;
+        System.out.println(total);
 
-       /* Predicate<double[]> globallyChecker = value -> globallyFormula.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
-        Predicate<double[]> eventuallyChecker = value -> eventuallyFormula.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
-        StringBuilder stringBuilder = new StringBuilder();
-        getString(stringBuilder, space, intervals, formulaPrinter, globallyFormula, ass, globallyChecker);
-        getString(stringBuilder, space, intervals, formulaPrinter, eventuallyFormula, ass, eventuallyChecker);
-*/
         Path path = Paths.get(outputLocation);
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(stringBuilder.toString());
@@ -98,10 +96,10 @@ public class AllFormulas {
     private static void getString(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula prova, Function<double[], Assignment> ass, Predicate<double[]> eval) {
         Function<double[], String> printer = value -> prova.accept(formulaPrinter).evaluate(ass.apply(value));
         for (double[] interval : intervals) {
-            for (double [] spaceInterval : spaceIntervals) {
+            for (double[] spaceInterval : spaceIntervals) {
                 double[] params = {spaceInterval[0], spaceInterval[1], interval[0], interval[1]};
                 boolean test = eval.test(params);
-                if(test) {
+                if (test) {
                     stringBuilder.append(printer.apply(params)).append("\n");
                 }
             }

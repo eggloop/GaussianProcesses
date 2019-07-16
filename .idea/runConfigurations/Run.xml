@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/eggloop.jar" />
+    <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/scripts/traccia.json $PROJECT_DIR$/scripts/output/prova" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2" />
+  </configuration>
+</component>
