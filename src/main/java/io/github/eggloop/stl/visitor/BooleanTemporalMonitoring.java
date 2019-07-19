@@ -4,10 +4,9 @@ import io.github.eggloop.expression.relational.BooleanDomain;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 import io.github.eggloop.trajectories.Trajectory;
+import io.github.eggloop.utils.ArraysUtility;
 
-import java.util.OptionalInt;
 import java.util.function.IntPredicate;
-import java.util.stream.IntStream;
 
 public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
 
@@ -65,9 +64,8 @@ public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
             double leftInterval = formula.getInterval().getLeft().compile().evaluate(assignment);
             double rightInterval = formula.getInterval().getRight().compile().evaluate(assignment);
             IntPredicate predicate = i -> formula.getArgument().accept(new BooleanTemporalMonitoring(trajectory, i)).evaluate(assignment);
-            IntPredicate time = i -> (times[i] > leftInterval && times[i] < rightInterval);
-            OptionalInt first = IntStream.range(0, times.length).filter(time.and(predicate)).findFirst();
-            return first.isPresent();
+            return ArraysUtility.getPositionOfOrderedArrayBetween(times, leftInterval, rightInterval).
+                    anyMatch(predicate);
         };
     }
 
@@ -78,9 +76,8 @@ public class BooleanTemporalMonitoring implements FormulaVisitor<Boolean> {
             double leftInterval = formula.getInterval().getLeft().compile().evaluate(assignment);
             double rightInterval = formula.getInterval().getRight().compile().evaluate(assignment);
             IntPredicate predicate = i -> formula.getArgument().accept(new BooleanTemporalMonitoring(trajectory, i)).evaluate(assignment);
-            IntPredicate time = i -> (times[i] > leftInterval && times[i] < rightInterval);
-            OptionalInt first = IntStream.range(0, times.length).filter(time.and(predicate.negate())).findFirst();
-            return !first.isPresent();
+            return ArraysUtility.getPositionOfOrderedArrayBetween(times, leftInterval, rightInterval).
+                    noneMatch(predicate.negate());
         };
     }
 }
