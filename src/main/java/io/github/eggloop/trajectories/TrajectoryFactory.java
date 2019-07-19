@@ -33,7 +33,21 @@ public class TrajectoryFactory {
         double[] time = toDoubles(timeJson);
         double[][] values = toMatrix((JSONArray) root.get("values"));
         return new Trajectory(variables, time, values);
+    }
 
+    public static Trajectory[] fromJSONMultiple(String jsonEntry) throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject root = (JSONObject) parser.parse(jsonEntry);
+        JSONArray traces = (JSONArray) (root.get("traces"));
+        String[] tracesString = new String[traces.size()];
+        for (int i = 0; i < tracesString.length; i++) {
+            tracesString[i] = ((JSONObject) traces.get(i)).toJSONString();
+        }
+        Trajectory[] trajectories = new Trajectory[traces.size()];
+        for (int i = 0; i < tracesString.length; i++) {
+            trajectories[i] = fromJSON(tracesString[i]);
+        }
+        return trajectories;
     }
 
     private static JSONArray toJSON(double[] value) {

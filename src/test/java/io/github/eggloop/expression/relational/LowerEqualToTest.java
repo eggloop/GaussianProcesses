@@ -32,7 +32,7 @@ class LowerEqualToTest {
     void toStringTest() {
         String expected = "X <= 0.0";
 
-        assertEquals(expected, lowerEqualTo.toString());
+        assertEquals(expected, lowerEqualTo.print().evaluate(new Assignment()));
     }
 
 }

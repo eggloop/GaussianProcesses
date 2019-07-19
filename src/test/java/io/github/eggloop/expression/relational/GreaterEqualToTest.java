@@ -33,7 +33,7 @@ class GreaterEqualToTest {
     void toStringTest() {
         String expected = "X >= 0.0";
 
-        assertEquals(expected, greaterEqualTo.toString());
+        assertEquals(expected, greaterEqualTo.print().evaluate(new Assignment()));
     }
 
 }

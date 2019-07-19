@@ -37,6 +37,11 @@ jar {
     }
 }
 
+clean.doLast {
+    file("${rootDir}/scripts/output/prova").delete()
+    println "${rootDir}/scripts/output/prova"
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true

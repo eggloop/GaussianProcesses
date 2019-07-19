@@ -21,4 +21,9 @@ public class GreaterThan implements RelationalExpression {
     public DomainFunction<String> print() {
         return assignment -> left.print().evaluate(assignment)+ " > " + right.print().evaluate(assignment);
     }
+
+    @Override
+    public String toString() {
+        return print().evaluate(null);
+    }
 }

@@ -33,6 +33,6 @@ class EqualToTest {
     void toStringTest() {
         String expected = "X == 0.0";
 
-        assertEquals(expected, equalTo.toString());
+        assertEquals(expected, equalTo.print().evaluate(new Assignment()));
     }
 }

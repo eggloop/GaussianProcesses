@@ -16,3 +16,4 @@ build/
 .idea/shelf
 .idea/sonarlint
 .idea/*.*
+.ipynb_checkpoints

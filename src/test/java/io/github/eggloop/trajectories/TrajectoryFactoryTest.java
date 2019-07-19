@@ -34,4 +34,18 @@ class TrajectoryFactoryTest {
         assertArrayEquals(times, actualTrajectory.getTimes());
         assertMatrixEquals(values, actualTrajectory.getValues());
     }
+
+    @Test
+    void fromJSONMultiple() throws ParseException {
+        double[][] values = new double[][]{{1, 2}, {2, 3}};
+        double[] times = new double[]{1, 2};
+        String[] names = new String[]{"X", "Y"};
+        String actualJSON = "{\"traces\":[{\"variables\":[\"X\",\"Y\"],\"values\":[[1.0,2.0],[2.0,3.0]],\"time\":[1.0,2.0]}]}";
+
+        Trajectory[] actualTrajectory = TrajectoryFactory.fromJSONMultiple(actualJSON);
+
+        assertArrayEquals(names, actualTrajectory[0].getVariables());
+        assertArrayEquals(times, actualTrajectory[0].getTimes());
+        assertMatrixEquals(values, actualTrajectory[0].getValues());
+    }
 }

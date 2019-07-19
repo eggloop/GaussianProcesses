@@ -9,10 +9,10 @@ class ConjunctionTest {
 
     @Test
     void toStringTest() {
-        Formula left = new Atom(new GreaterThan(new Variable("X"),new Constant(0)));
-        Formula right = new Atom(new GreaterThan(new Variable("X"),new Variable("Y")));
+        Formula left = new Atom(new GreaterThan(new Variable("X"), new Constant(0)));
+        Formula right = new Atom(new GreaterThan(new Variable("X"), new Variable("Y")));
 
-        Formula conjunction = new Conjunction(left,right);
+        Formula conjunction = new Conjunction(left, right);
 
         System.out.println(conjunction.toString());
     }

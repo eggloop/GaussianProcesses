@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -31,24 +32,25 @@ public class AllFormulas {
     }
 
     private static List<double[]> generateIntervals(double[] array) {
-        List<double[]> spaceIntervals = new ArrayList<>();
+        List<double[]> intervals = new ArrayList<>();
         for (int i = 0; i < array.length; i++) {
             double left = array[i];
-            for (int j = i+1; j < array.length; j++) {
-                spaceIntervals.add(new double[]{left, array[j]});
+            for (int j = i + 1; j < array.length; j++) {
+                intervals.add(new double[]{left, array[j]});
             }
         }
-        return spaceIntervals;
+        return intervals;
     }
 
     public static void getTrajectory(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
         String jsonTrajectory = FileUtils.readFileToString(inputLocationOfTrajectories);
         Trajectory trajectory = TrajectoryFactory.fromJSON(jsonTrajectory);
         double[] times = trajectory.getTimes();
-        double[] space = IntStream.range(-8, 18).mapToDouble(s -> 0.1 * s).toArray();
-
-        List<double[]> spaceIntervals = generateIntervals(space);
+//        double[] times = IntStream.range(0, 11).mapToDouble(s -> s).toArray();
         List<double[]> intervals = generateIntervals(times);
+
+        double[] space = IntStream.range(-8, 18).mapToDouble(s -> 0.1 * s).toArray();
+        List<double[]> spaceIntervals = generateIntervals(space);
 
 //        List<double[]> intervals = new ArrayList<>();
 //        for (int i = 0; i < times.length; i++) {
@@ -67,6 +69,19 @@ public class AllFormulas {
         Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
         Formula aFinally = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
         Formula aGlobally = new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
+        Formula aGloballyFinally = new Globally(new Interval(new Variable("c"), new Variable("d")), new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh)));
+        Formula aFinallyGlobally = new Finally(new Interval(new Variable("c"), new Variable("d")), new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh)));
+
+        Function<double[], Assignment> ass2 = value -> {
+            Assignment assignment = new Assignment();
+            assignment.put("h", value[0]);
+            assignment.put("l", value[1]);
+            assignment.put("a", value[2]);
+            assignment.put("b", value[3]);
+            assignment.put("c", value[4]);
+            assignment.put("d", value[5]);
+            return assignment;
+        };
 
         Function<double[], Assignment> ass = value -> {
             Assignment assignment = new Assignment();
@@ -80,11 +95,24 @@ public class AllFormulas {
 
         Predicate<double[]> finallycheck = value -> aFinally.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
         Predicate<double[]> globallycheck = value -> aGlobally.accept(booleanTemporalMonitoring).evaluate(ass.apply(value));
+        Predicate<double[]> finallyGloballycheck = value -> aFinallyGlobally.accept(booleanTemporalMonitoring).evaluate(ass2.apply(value));
+        Predicate<double[]> globallyFinallycheck = value -> aGloballyFinally.accept(booleanTemporalMonitoring).evaluate(ass2.apply(value));
+
+
         StringBuilder stringBuilder = new StringBuilder();
+
+        double[][] param = getParamsGrid(spaceIntervals, intervals);
+
+        long initA = System.currentTimeMillis();
+        double[][] validParam = Arrays.stream(param).parallel().filter(finallycheck).toArray(double[][]::new);
+        System.out.println("stream:"+(System.currentTimeMillis() - initA));
+        //motorino
         long init = System.currentTimeMillis();
         getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, aFinally, ass, finallycheck);
-        getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, aGlobally, ass, globallycheck);
-        long total = System.currentTimeMillis()-init;
+//        getString(stringBuilder, spaceIntervals, intervals, formulaPrinter, aGlobally, ass, globallycheck);
+//        getString2(stringBuilder, spaceIntervals, intervals, formulaPrinter, aFinallyGlobally, ass2, finallyGloballycheck);
+//        getString2(stringBuilder, spaceIntervals, intervals, formulaPrinter, aGloballyFinally, ass2, globallyFinallycheck);
+        long total = System.currentTimeMillis() - init;
         System.out.println(total);
 
         Path path = Paths.get(outputLocation);
@@ -93,14 +121,42 @@ public class AllFormulas {
         }
     }
 
-    private static void getString(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula prova, Function<double[], Assignment> ass, Predicate<double[]> eval) {
-        Function<double[], String> printer = value -> prova.accept(formulaPrinter).evaluate(ass.apply(value));
+    private static void getString(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]> eval) {
+        Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
         for (double[] interval : intervals) {
             for (double[] spaceInterval : spaceIntervals) {
                 double[] params = {spaceInterval[0], spaceInterval[1], interval[0], interval[1]};
                 boolean test = eval.test(params);
                 if (test) {
                     stringBuilder.append(printer.apply(params)).append("\n");
+                }
+            }
+        }
+    }
+
+    private static double[][] getParamsGrid(List<double[]> spaceIntervals, List<double[]> intervals) {
+        double[][] params = new double[intervals.size() * spaceIntervals.size()][];
+        int c = 0;
+        for (double[] interval : intervals) {
+            for (double[] spaceInterval : spaceIntervals) {
+                params[c++] = new double[]{spaceInterval[0], spaceInterval[1], interval[0], interval[1]};
+            }
+        }
+        return params;
+    }
+
+    private static void getString2(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]> eval) {
+        Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
+        for (double[] interval : intervals) {
+            for (double[] interval2 : intervals) {
+                for (double[] spaceInterval : spaceIntervals) {
+                    if (interval2[1] + interval[1] < 10) {
+                        double[] params = {spaceInterval[0], spaceInterval[1], interval[0], interval[1], interval2[0], interval2[1]};
+                        boolean test = eval.test(params);
+                        if (test) {
+                            stringBuilder.append(printer.apply(params)).append("\n");
+                        }
+                    }
                 }
             }
         }
