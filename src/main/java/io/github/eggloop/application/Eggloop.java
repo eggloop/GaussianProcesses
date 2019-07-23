@@ -12,7 +12,7 @@ public class Eggloop {
         if (EggloopOptions.HELP.is(args[0])) {
             ConsoleWriter.info(EggloopOptions.printAll());
         } else {
-            AllFormulas.getTrajectory(args[0], args[1]);
+            AllFormulas.getTrajectories(args[0], args[1]);
         }
     }
 }

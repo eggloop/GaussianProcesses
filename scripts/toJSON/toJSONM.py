@@ -9,8 +9,8 @@ with open(filename, "r") as file:
     names = file.readline()
     a = file.read()
     trajectories = a.split("\n\n")
-
-tras = [np.array([a.split() for a in tra.split("\n")]) for tra in trajectories]
+trajectories=trajectories[:-2]
+tras = [np.array([a.split() for a in tra.split("\n")],dtype=np.float64) for tra in trajectories]
 
 traces = [
     {"time": trasi[:, 0].tolist(), "values": trasi[:, 1:].transpose().tolist(), "variables": names.strip("\n").split()}
