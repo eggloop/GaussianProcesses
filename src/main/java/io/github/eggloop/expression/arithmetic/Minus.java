@@ -1,6 +1,7 @@
 package io.github.eggloop.expression.arithmetic;
 
 import io.github.eggloop.expression.relational.DomainFunction;
+import io.github.eggloop.stl.syntax.SyntaxUtils;
 
 public class Minus implements ArithmeticExpression {
 
@@ -17,6 +18,11 @@ public class Minus implements ArithmeticExpression {
 
     @Override
     public DomainFunction<String> print() {
-        return assignment -> " - " + argument.print().evaluate(assignment);
+        return assignment -> SyntaxUtils.toStringUnaryFormula("-", argument.print().evaluate(assignment));
+    }
+
+    @Override
+    public String toString() {
+        return SyntaxUtils.toStringUnaryFormula("-", argument.toString());
     }
 }

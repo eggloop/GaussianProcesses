@@ -11,11 +11,11 @@ public class Assignment {
         this.assignment = new HashMap<>();
     }
 
-    double get(String key) {
+    public double get(String key) {
         return assignment.get(key);
     }
 
-    boolean contains(String name) {
+    public boolean contains(String name) {
         return assignment.containsKey(name);
     }
 

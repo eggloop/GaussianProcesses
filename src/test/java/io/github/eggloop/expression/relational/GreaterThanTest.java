@@ -1,9 +1,6 @@
 package io.github.eggloop.expression.relational;
 
-import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
-import io.github.eggloop.expression.arithmetic.Assignment;
-import io.github.eggloop.expression.arithmetic.Constant;
-import io.github.eggloop.expression.arithmetic.Variable;
+import io.github.eggloop.expression.arithmetic.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +19,7 @@ class GreaterThanTest {
     }
 
     @Test
-    void evaluateTest() {
+    void testEvaluate() {
         Assignment assignment = new Assignment();
         assignment.put("X", 1.);
         BooleanDomain domain = new BooleanDomain();
@@ -33,9 +30,16 @@ class GreaterThanTest {
     }
 
     @Test
-    void toStringTest() {
-        String expected = "X > 0.0";
+    void testPrint() {
+        String expected = "(X > 0.0)";
 
         assertEquals(expected, greaterThan.print().evaluate(new Assignment()));
+    }
+
+    @Test
+    void testToString() {
+        String expected = "(X > 0.0)";
+
+        assertEquals(expected, greaterThan.toString());
     }
 }

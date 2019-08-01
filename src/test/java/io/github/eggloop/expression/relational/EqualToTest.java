@@ -19,7 +19,7 @@ class EqualToTest {
     }
 
     @Test
-    void evaluateTest() {
+    void testEvaluate() {
         Assignment assignment = new Assignment();
         assignment.put("X", 0.);
         BooleanDomain domain = new BooleanDomain();
@@ -30,9 +30,16 @@ class EqualToTest {
     }
 
     @Test
-    void toStringTest() {
-        String expected = "X == 0.0";
+    void testPrint() {
+        String expected = "(X == 0.0)";
 
         assertEquals(expected, equalTo.print().evaluate(new Assignment()));
+    }
+
+    @Test
+    void testToString() {
+        String expected = "(X == 0.0)";
+
+        assertEquals(expected, equalTo.toString());
     }
 }

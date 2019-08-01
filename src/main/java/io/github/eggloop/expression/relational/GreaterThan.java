@@ -1,6 +1,7 @@
 package io.github.eggloop.expression.relational;
 
 import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
+import io.github.eggloop.stl.syntax.SyntaxUtils;
 
 public class GreaterThan implements RelationalExpression {
 
@@ -19,11 +20,11 @@ public class GreaterThan implements RelationalExpression {
 
     @Override
     public DomainFunction<String> print() {
-        return assignment -> left.print().evaluate(assignment)+ " > " + right.print().evaluate(assignment);
+        return assignment -> SyntaxUtils.toStringBinaryFormula(left.print().evaluate(assignment), ">", right.print().evaluate(assignment));
     }
 
     @Override
     public String toString() {
-        return print().evaluate(null);
+        return SyntaxUtils.toStringBinaryFormula(left.toString(), ">", right.toString());
     }
 }

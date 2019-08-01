@@ -1,6 +1,6 @@
 package io.github.eggloop.application;
 
-import io.github.eggloop.spider.AllFormulas;
+import io.github.eggloop.spider.AllFormulas2;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class Eggloop {
         if (EggloopOptions.HELP.is(args[0])) {
             ConsoleWriter.info(EggloopOptions.printAll());
         } else {
-            AllFormulas.getTrajectories(args[0], args[1]);
+            AllFormulas2.getTrajectories(args[0], args[1]);
         }
     }
 }

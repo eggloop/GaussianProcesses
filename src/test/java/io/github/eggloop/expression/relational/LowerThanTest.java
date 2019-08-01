@@ -18,7 +18,7 @@ class LowerThanTest {
     }
 
     @Test
-    void evaluateTest() {
+    void testEvaluate() {
         Assignment assignment = new Assignment();
         assignment.put("X", -2.);
         BooleanDomain domain = new BooleanDomain();
@@ -29,10 +29,17 @@ class LowerThanTest {
     }
 
     @Test
-    void toStringTest() {
-        String expected = "X < 0.0";
+    void testPrint() {
+        String expected = "(X < 0.0)";
 
         assertEquals(expected, lowerThan.print().evaluate(new Assignment()));
+    }
+
+    @Test
+    void testToString() {
+        String expected = "(X < 0.0)";
+
+        assertEquals(expected, lowerThan.toString());
     }
 
 

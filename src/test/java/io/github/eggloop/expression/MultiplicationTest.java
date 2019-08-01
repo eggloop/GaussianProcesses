@@ -19,4 +19,22 @@ class MultiplicationTest {
 
         assertEquals(2., compiledAddition.evaluate(assignment));
     }
+
+    @Test
+    void testPrint() {
+        Assignment assignment = new Assignment();
+        assignment.put("X", 1.);
+
+        ArithmeticExpression multiplication = new Multiplication(new Variable("X"), new Variable("Y"));
+        DomainFunction<String> printMultiplication = multiplication.print();
+
+        assertEquals("(1.0 * Y)", printMultiplication.evaluate(assignment));
+    }
+
+    @Test
+    void testToString() {
+        ArithmeticExpression multiplication = new Multiplication(new Variable("X"), new Variable("Y"));
+
+        assertEquals("(X * Y)", multiplication.toString());
+    }
 }

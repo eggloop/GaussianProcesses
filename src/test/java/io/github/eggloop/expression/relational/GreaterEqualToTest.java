@@ -19,7 +19,7 @@ class GreaterEqualToTest {
     }
 
     @Test
-    void evaluateTest() {
+    void testEvaluate() {
         Assignment assignment = new Assignment();
         assignment.put("X", 1.);
         BooleanDomain domain = new BooleanDomain();
@@ -30,10 +30,17 @@ class GreaterEqualToTest {
     }
 
     @Test
-    void toStringTest() {
-        String expected = "X >= 0.0";
+    void testPrint() {
+        String expected = "(X >= 0.0)";
 
         assertEquals(expected, greaterEqualTo.print().evaluate(new Assignment()));
+    }
+
+    @Test
+    void testToString() {
+        String expected = "(X >= 0.0)";
+
+        assertEquals(expected, greaterEqualTo.toString());
     }
 
 }

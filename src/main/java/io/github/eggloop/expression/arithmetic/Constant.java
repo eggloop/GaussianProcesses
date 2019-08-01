@@ -24,4 +24,5 @@ public class Constant implements ArithmeticExpression {
     public String toString() {
         return String.valueOf(value);
     }
+
 }

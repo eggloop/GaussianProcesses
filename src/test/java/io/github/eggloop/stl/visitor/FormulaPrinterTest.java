@@ -18,7 +18,7 @@ class FormulaPrinterTest {
         Assignment assignment = new Assignment();
         assignment.put("p", 1);
         String accept = prova.accept(printer).evaluate(assignment);
-        System.out.println(accept);
+        System.out.println(prova.toString());
     }
 
     @Test

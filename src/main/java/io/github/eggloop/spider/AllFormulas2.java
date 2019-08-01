@@ -11,6 +11,7 @@ import io.github.eggloop.stl.visitor.LogicOperatorToken;
 import io.github.eggloop.trajectories.Trajectory;
 import io.github.eggloop.trajectories.TrajectoryFactory;
 import io.github.eggloop.utils.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.parser.ParseException;
 
 import java.io.BufferedWriter;
@@ -18,17 +19,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static io.github.eggloop.utils.CombinatoricsUtility.generateIntervals;
 
-public class AllFormulas {
+public class AllFormulas2 {
 
-    private AllFormulas() {
+    private AllFormulas2() {
         //utility class
     }
 
@@ -42,7 +46,11 @@ public class AllFormulas {
         List<double[]> spaceIntervals = generateIntervals(space);
         BooleanTemporalMonitoring[] booleanTemporalMonitoring = Arrays.stream(trajectories).map(BooleanTemporalMonitoring::new).toArray(BooleanTemporalMonitoring[]::new);
         FormulaPrinter formulaPrinter = new FormulaPrinter(new LogicOperatorToken());
-
+        System.out.println("INIT");
+//        List<double[]> parameters = getParameters(spaceIntervals, intervals);
+//        System.out.println("INIT");
+//        List<double[]> parameters2 = getParameters(parameters, intervals);
+//        System.out.println("INIT");
 
         Formula atoml = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
         Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
@@ -79,12 +87,29 @@ public class AllFormulas {
 
         StringBuilder stringBuilder = new StringBuilder();
         long init = System.currentTimeMillis();
-        getStrings(stringBuilder, spaceIntervals, intervals, formulaPrinter, aFinally, ass, finallycheck);
-        getStrings(stringBuilder, spaceIntervals, intervals, formulaPrinter, aGlobally, ass, globallycheck);
-        getStrings2(stringBuilder, spaceIntervals, intervals, formulaPrinter, aFinallyGlobally, ass2, finallyGloballycheck);
-        getStrings2(stringBuilder, spaceIntervals, intervals, formulaPrinter, aGloballyFinally, ass2, globallyFinallycheck);
-        long total = System.currentTimeMillis() - init;
-        System.out.println(total);
+        AtomicInteger counter = new AtomicInteger();
+        System.out.println("INIT");
+//        ParameterSupplier parameters = new ParameterSupplier(spaceIntervals, intervals);
+//        parameters.setConfiguration(1, 1);
+//        getStrings(stringBuilder, parameters, formulaPrinter, aFinally, ass, finallycheck, counter);
+//        System.out.println(System.currentTimeMillis() - init);
+//        System.out.println("COUNTER:" + counter.get());
+//        parameters = new ParameterSupplier(spaceIntervals, intervals);
+//        parameters.setConfiguration(1, 1);
+//        getStrings(stringBuilder, parameters, formulaPrinter, aGlobally, ass, globallycheck, counter);
+//        System.out.println(System.currentTimeMillis() - init);
+//        System.out.println("COUNTER:" + counter.get());
+        ParameterSupplier parameters = new ParameterSupplier(spaceIntervals, intervals);
+        parameters.setConfiguration(1, 2);
+        parameters.length();
+        getStrings(stringBuilder, parameters, formulaPrinter, aGloballyFinally, ass2, globallyFinallycheck, counter);
+        System.out.println(System.currentTimeMillis() - init);
+        System.out.println("COUNTER:" + counter.get());
+        parameters = new ParameterSupplier(spaceIntervals, intervals);
+        parameters.setConfiguration(1, 2);
+        getStrings(stringBuilder, parameters, formulaPrinter, aFinallyGlobally, ass2, finallyGloballycheck, counter);
+        System.out.println(System.currentTimeMillis() - init);
+        System.out.println("COUNTER:" + counter.get());
         Path path = Paths.get(outputLocation);
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(stringBuilder.toString());
@@ -93,7 +118,43 @@ public class AllFormulas {
 
     }
 
-    private static void getStrings(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]>[] eval) {
+    private static List<double[]> getParameters(List<double[]> spaceIntervals, List<double[]> intervals) {
+        List<double[]> params = new ArrayList<>();
+        for (double[] interval : intervals) {
+            for (double[] spaceInterval : spaceIntervals) {
+                params.add(ArrayUtils.addAll(spaceInterval, interval));
+            }
+        }
+        return params;
+    }
+
+//    private static List<double[]> getParameters2(List<double[]> spaceIntervals, List<double[]> intervals) {
+//        List<double[]> params = new ArrayList<>();
+//        for (double[] interval : intervals) {
+//            for (double[] interval2 : intervals) {
+//                for (double[] spaceInterval : spaceIntervals) {
+//                    params.add();
+//                }
+//            }
+//        }
+//        return params;
+//    }
+
+    private static boolean check(Predicate<double[]>[] eval, double[] param) {
+        boolean b = Arrays.stream(eval).parallel().anyMatch(s -> s.test(param));
+        boolean c = Arrays.stream(eval).parallel().anyMatch(s -> !s.test(param));
+        return b && c;
+    }
+
+    private static void getStrings(StringBuilder stringBuilder, ParameterSupplier parameters, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]>[] eval, AtomicInteger counter) {
+        Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
+        Stream.generate(parameters).limit(parameters.length()).filter(s -> check(eval, s)).peek(s -> counter.incrementAndGet()).forEach(s -> stringBuilder.append(printer.apply(s)).append("\n"));
+    }
+
+
+    private static void getStrings(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]>
+            intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<
+            double[]>[] eval) {
         Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
         for (double[] interval : intervals) {
             for (double[] spaceInterval : spaceIntervals) {
@@ -107,11 +168,13 @@ public class AllFormulas {
     }
 
 
-    public static Predicate<double[]> construct(Formula formula, BooleanTemporalMonitoring monitor, Function<double[], Assignment> function) {
+    public static Predicate<double[]> construct(Formula formula, BooleanTemporalMonitoring monitor, Function<
+            double[], Assignment> function) {
         return value -> formula.accept(monitor).evaluate(function.apply(value));
     }
 
-    public static void getTrajectory(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
+    public static void getTrajectory(String inputLocationOfTrajectories, String outputLocation) throws
+            IOException, ParseException {
         String jsonTrajectory = FileUtils.readFileToString(inputLocationOfTrajectories);
         Trajectory trajectory = TrajectoryFactory.fromJSON(jsonTrajectory);
         double[] times = trajectory.getTimes();
@@ -190,7 +253,9 @@ public class AllFormulas {
         }
     }
 
-    private static void getString(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]> eval) {
+    private static void getString(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]>
+            intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<
+            double[]> eval) {
         Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
         for (double[] interval : intervals) {
             for (double[] spaceInterval : spaceIntervals) {
@@ -203,6 +268,7 @@ public class AllFormulas {
         }
     }
 
+
     private static double[][] getParamsGrid(List<double[]> spaceIntervals, List<double[]> intervals) {
         double[][] params = new double[intervals.size() * spaceIntervals.size()][];
         int c = 0;
@@ -214,7 +280,9 @@ public class AllFormulas {
         return params;
     }
 
-    private static void getString2(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]> eval) {
+    private static void getString2(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]>
+            intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<
+            double[]> eval) {
         Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
         for (double[] interval : intervals) {
             for (double[] interval2 : intervals) {
@@ -231,7 +299,9 @@ public class AllFormulas {
         }
     }
 
-    private static void getStrings2(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]> intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]>[] eval) {
+    private static void getStrings2(StringBuilder stringBuilder, List<double[]> spaceIntervals, List<double[]>
+            intervals, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<
+            double[]>[] eval) {
         Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
         for (double[] interval : intervals) {
             for (double[] interval2 : intervals) {
@@ -241,11 +311,11 @@ public class AllFormulas {
                         long count = Arrays.stream(eval).parallel().filter(s -> s.test(params)).count();
                         if (count > 0 && count < eval.length) {
                             stringBuilder.append(printer.apply(params)).append(" C:").append(count).append("\n");
+                        }
                     }
                 }
             }
         }
-    }
 
 
     }

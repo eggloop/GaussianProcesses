@@ -19,4 +19,9 @@ public class Interval {
     public ArithmeticExpression getRight() {
         return right;
     }
+
+    @Override
+    public String toString() {
+        return "[" + left + " , " + right + "]";
+    }
 }

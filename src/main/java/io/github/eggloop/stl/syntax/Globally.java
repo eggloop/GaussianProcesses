@@ -25,4 +25,9 @@ public class Globally implements Formula {
     public Formula getArgument() {
         return argument;
     }
+
+    @Override
+    public String toString() {
+        return "G_"+interval.toString()+argument.toString();
+    }
 }

@@ -25,4 +25,9 @@ public class Finally implements Formula {
     public Formula getArgument() {
         return argument;
     }
+
+    @Override
+    public String toString() {
+        return "F_" + interval.toString() + argument.toString();
+    }
 }
