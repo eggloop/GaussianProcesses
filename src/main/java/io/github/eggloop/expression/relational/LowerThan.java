@@ -1,7 +1,10 @@
 package io.github.eggloop.expression.relational;
 
 import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
+import io.github.eggloop.expression.arithmetic.Assignment;
 import io.github.eggloop.stl.syntax.SyntaxUtils;
+
+import java.util.function.Predicate;
 
 public class LowerThan implements RelationalExpression {
 
@@ -21,6 +24,11 @@ public class LowerThan implements RelationalExpression {
     @Override
     public DomainFunction<String> print() {
         return assignment -> SyntaxUtils.toStringBinaryFormula(left.print().evaluate(assignment), "<", right.print().evaluate(assignment));
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> logicalImplication() {
+        return assignment -> left.logicalImplication().evaluate(assignment).negate().and(right.logicalImplication().evaluate(assignment));
     }
 
     @Override

@@ -3,6 +3,8 @@ package io.github.eggloop.expression.arithmetic;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.SyntaxUtils;
 
+import java.util.function.Predicate;
+
 public class Multiplication implements ArithmeticExpression {
 
     private ArithmeticExpression left;
@@ -21,6 +23,13 @@ public class Multiplication implements ArithmeticExpression {
     @Override
     public DomainFunction<String> print() {
         return assignment -> SyntaxUtils.toStringBinaryFormula(left.print().evaluate(assignment), "*", right.print().evaluate(assignment));
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> logicalImplication() {
+        DomainFunction<Predicate<Assignment>> predicateLeft = left.logicalImplication();
+        DomainFunction<Predicate<Assignment>> predicateRight = right.logicalImplication();
+        return assignment -> predicateLeft.evaluate(assignment).and(predicateRight.evaluate(assignment));
     }
 
     @Override

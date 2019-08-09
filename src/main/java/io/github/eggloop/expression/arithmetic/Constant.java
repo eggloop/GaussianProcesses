@@ -2,6 +2,8 @@ package io.github.eggloop.expression.arithmetic;
 
 import io.github.eggloop.expression.relational.DomainFunction;
 
+import java.util.function.Predicate;
+
 public class Constant implements ArithmeticExpression {
 
     private double value;
@@ -18,6 +20,11 @@ public class Constant implements ArithmeticExpression {
     @Override
     public DomainFunction<String> print() {
         return assignment -> String.valueOf(value);
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> logicalImplication() {
+        return assignment -> inner -> true;
     }
 
     @Override

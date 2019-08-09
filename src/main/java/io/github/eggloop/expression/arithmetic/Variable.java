@@ -2,6 +2,8 @@ package io.github.eggloop.expression.arithmetic;
 
 import io.github.eggloop.expression.relational.DomainFunction;
 
+import java.util.function.Predicate;
+
 public class Variable implements ArithmeticExpression {
 
     private String name;
@@ -29,5 +31,10 @@ public class Variable implements ArithmeticExpression {
             }
             return name;
         };
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> logicalImplication() {
+        return assignment -> inner -> !assignment.contains(name) || inner.get(name) > assignment.get(name);
     }
 }
