@@ -1,7 +1,6 @@
 package io.github.eggloop.stl.syntax;
 
 import io.github.eggloop.expression.relational.DomainFunction;
-import io.github.eggloop.stl.visitor.FormulaVisitor;
 
 public class Finally implements Formula {
 
@@ -29,5 +28,10 @@ public class Finally implements Formula {
     @Override
     public String toString() {
         return "F_" + interval.toString() + argument.toString();
+    }
+
+    @Override
+    public String hash() {
+        return "F_" + argument.toString();
     }
 }

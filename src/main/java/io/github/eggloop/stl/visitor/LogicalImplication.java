@@ -1,14 +1,12 @@
 package io.github.eggloop.stl.visitor;
 
-import io.github.eggloop.expression.arithmetic.ArithmeticExpression;
-import io.github.eggloop.expression.arithmetic.Assignment;
-import io.github.eggloop.expression.arithmetic.Variable;
+import io.github.eggloop.expression.arithmetic.*;
 import io.github.eggloop.expression.relational.DomainFunction;
 import io.github.eggloop.stl.syntax.*;
 
 import java.util.function.Predicate;
 
-public class LogicalImplication implements FormulaVisitor<Predicate<Assignment>> {
+public class LogicalImplication implements FormulaVisitor<Predicate<Assignment>>, ArithmeticExpressionVisitor<Predicate<Assignment>> {
     @Override
     public DomainFunction<Predicate<Assignment>> visit(Negation formula) {
         return assignment -> formula.getArgument().accept(this).evaluate(assignment).negate();
@@ -54,5 +52,40 @@ public class LogicalImplication implements FormulaVisitor<Predicate<Assignment>>
                     inner.get(rightVariable.toString()) <= rightVariable.compile().evaluate(assignment) && formula.getArgument().accept(this).evaluate(assignment).test(inner);
         }
         return assignment -> inner -> false;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Multiplication expression) {
+        return null;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Division expression) {
+        return null;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Minus expression) {
+        return null;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Subtraction expression) {
+        return null;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Constant expression) {
+        return null;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Addition expression) {
+        return null;
+    }
+
+    @Override
+    public DomainFunction<Predicate<Assignment>> visit(Variable expression) {
+        return null;
     }
 }

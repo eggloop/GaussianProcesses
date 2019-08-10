@@ -13,6 +13,11 @@ public class Constant implements ArithmeticExpression {
     }
 
     @Override
+    public <T> DomainFunction<T> accept(ArithmeticExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public DomainFunction<Double> compile() {
         return assignment -> value;
     }

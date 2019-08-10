@@ -16,6 +16,11 @@ public class Multiplication implements ArithmeticExpression {
     }
 
     @Override
+    public <T> DomainFunction<T> accept(ArithmeticExpressionVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public DomainFunction<Double> compile() {
         return assignment -> left.compile().evaluate(assignment) * right.compile().evaluate(assignment);
     }

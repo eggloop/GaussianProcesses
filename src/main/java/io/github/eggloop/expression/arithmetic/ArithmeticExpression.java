@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 
 public interface ArithmeticExpression {
 
+    <T> DomainFunction<T> accept(ArithmeticExpressionVisitor<T> visitor);
+
     DomainFunction<Double> compile();
 
     DomainFunction<String> print();
