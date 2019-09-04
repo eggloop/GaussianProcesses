@@ -30,12 +30,11 @@ import java.util.stream.Stream;
 
 import static io.github.eggloop.utils.CombinatoricsUtility.generateIntervals;
 
-public class AllFormulas2 {
+public class AllFormulas3 {
 
-    private AllFormulas2() {
+    private AllFormulas3() {
         //utility class
     }
-
 
     public static void getTrajectories(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
         String jsonTrajectories = FileUtils.readFileToString(inputLocationOfTrajectories);
@@ -80,43 +79,122 @@ public class AllFormulas2 {
         };
 
 
-        Predicate<double[]>[] finallycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct(aFinally, s, ass)).toArray(Predicate[]::new);
-        Predicate<double[]>[] globallycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct(aGlobally, s, ass)).toArray(Predicate[]::new);
-        Predicate<double[]>[] finallyGloballycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct(aFinallyGlobally, s, ass2)).toArray(Predicate[]::new);
-        Predicate<double[]>[] globallyFinallycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct(aGloballyFinally, s, ass2)).toArray(Predicate[]::new);
+        Predicate<Assignment>[] finallycheck = Arrays.stream(booleanTemporalMonitoring).map(construct(aFinally)).toArray(Predicate[]::new);
+        Predicate<Assignment>[] globallycheck = Arrays.stream(booleanTemporalMonitoring).map(construct(aGlobally)).toArray(Predicate[]::new);
+        Predicate<Assignment>[] finallyGloballycheck = Arrays.stream(booleanTemporalMonitoring).map(construct(aFinallyGlobally)).toArray(Predicate[]::new);
+        Predicate<Assignment>[] globallyFinallycheck = Arrays.stream(booleanTemporalMonitoring).map(construct(aGloballyFinally)).toArray(Predicate[]::new);
 
         StringBuilder stringBuilder = new StringBuilder();
         long init = System.currentTimeMillis();
         AtomicInteger counter = new AtomicInteger();
         System.out.println("INIT");
-//        ParameterSupplier parameters = new ParameterSupplier(spaceIntervals, intervals);
-//        parameters.setConfiguration(1, 1);
-//        getStrings(stringBuilder, parameters, formulaPrinter, aFinally, ass, finallycheck, counter);
-//        System.out.println(System.currentTimeMillis() - init);
-//        System.out.println("COUNTER:" + counter.get());
-//        parameters = new ParameterSupplier(spaceIntervals, intervals);
-//        parameters.setConfiguration(1, 1);
-//        getStrings(stringBuilder, parameters, formulaPrinter, aGlobally, ass, globallycheck, counter);
-//        System.out.println(System.currentTimeMillis() - init);
-//        System.out.println("COUNTER:" + counter.get());
         ParameterSupplier parameters = new ParameterSupplier(spaceIntervals, intervals);
-        parameters.setConfiguration(1, 2);
-        parameters.length();
-        getStrings(stringBuilder, parameters, formulaPrinter, aGloballyFinally, ass2, globallyFinallycheck, counter);
+        parameters.setConfiguration(1, 1);
+        getStrings(stringBuilder, parameters, formulaPrinter, aFinally, ass, finallycheck, counter);
         System.out.println(System.currentTimeMillis() - init);
         System.out.println("COUNTER:" + counter.get());
         parameters = new ParameterSupplier(spaceIntervals, intervals);
-        parameters.setConfiguration(1, 2);
-        getStrings(stringBuilder, parameters, formulaPrinter, aFinallyGlobally, ass2, finallyGloballycheck, counter);
+        parameters.setConfiguration(1, 1);
+        getStrings(stringBuilder, parameters, formulaPrinter, aGlobally, ass, globallycheck, counter);
         System.out.println(System.currentTimeMillis() - init);
         System.out.println("COUNTER:" + counter.get());
+
+//        parameters = new ParameterSupplier(spaceIntervals, intervals);
+//        parameters.setConfiguration(1, 2);
+//        parameters.length();
+//        getStrings(stringBuilder, parameters, formulaPrinter, aGloballyFinally, ass2, globallyFinallycheck, counter);
+//        System.out.println(System.currentTimeMillis() - init);
+//        System.out.println("COUNTER:" + counter.get());
+//        parameters = new ParameterSupplier(spaceIntervals, intervals);
+//        parameters.setConfiguration(1, 2);
+//        getStrings(stringBuilder, parameters, formulaPrinter, aFinallyGlobally, ass2, finallyGloballycheck, counter);
+//        System.out.println(System.currentTimeMillis() - init);
+//        System.out.println("COUNTER:" + counter.get());
         Path path = Paths.get(outputLocation);
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(stringBuilder.toString());
         }
-
-
     }
+
+    public static void getTrajectories2(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
+        String jsonTrajectories = FileUtils.readFileToString(inputLocationOfTrajectories);
+        Trajectory[] trajectories = TrajectoryFactory.fromJSONMultiple(jsonTrajectories);
+        double[] times = trajectories[0].getTimes();
+        List<double[]> intervals = generateIntervals(times);
+        double[] space = IntStream.range(-8, 18).mapToDouble(s -> 0.1 * s).toArray();
+        List<double[]> spaceIntervals = generateIntervals(space);
+        BooleanTemporalMonitoring[] booleanTemporalMonitoring = Arrays.stream(trajectories).map(BooleanTemporalMonitoring::new).toArray(BooleanTemporalMonitoring[]::new);
+        FormulaPrinter formulaPrinter = new FormulaPrinter(new LogicOperatorToken());
+        System.out.println("INIT");
+//        List<double[]> parameters = getParameters(spaceIntervals, intervals);
+//        System.out.println("INIT");
+//        List<double[]> parameters2 = getParameters(parameters, intervals);
+//        System.out.println("INIT");
+
+        Formula atoml = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
+        Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
+        Formula aFinally = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
+        Formula aGlobally = new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
+        Formula aGloballyFinally = new Globally(new Interval(new Variable("c"), new Variable("d")), new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh)));
+        Formula aFinallyGlobally = new Finally(new Interval(new Variable("c"), new Variable("d")), new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh)));
+
+        Function<double[], Assignment> ass2 = value -> {
+            Assignment assignment = new Assignment();
+            assignment.put("h", value[0]);
+            assignment.put("l", value[1]);
+            assignment.put("a", value[2]);
+            assignment.put("b", value[3]);
+            assignment.put("c", value[4]);
+            assignment.put("d", value[5]);
+            return assignment;
+        };
+
+        Function<double[], Assignment> ass = value -> {
+            Assignment assignment = new Assignment();
+            assignment.put("h", value[0]);
+            assignment.put("l", value[1]);
+            assignment.put("a", value[2]);
+            assignment.put("b", value[3]);
+            return assignment;
+        };
+
+
+        Predicate<Assignment>[] finallycheck = Arrays.stream(booleanTemporalMonitoring).map(monitor -> construct2(aFinally, monitor)).toArray(Predicate[]::new);
+        Predicate<Assignment>[] globallycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct2(aGlobally, s)).toArray(Predicate[]::new);
+//        Predicate<double[]>[] finallyGloballycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct(aFinallyGlobally, s, ass2)).toArray(Predicate[]::new);
+//        Predicate<double[]>[] globallyFinallycheck = Arrays.stream(booleanTemporalMonitoring).map(s -> construct(aGloballyFinally, s, ass2)).toArray(Predicate[]::new);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        long init = System.currentTimeMillis();
+        AtomicInteger counter = new AtomicInteger();
+        System.out.println("INIT");
+        ParameterSupplier parameters = new ParameterSupplier(spaceIntervals, intervals);
+        parameters.setConfiguration(1, 1);
+        getStrings2(stringBuilder, parameters, formulaPrinter, aFinally, ass, finallycheck, counter);
+        System.out.println(System.currentTimeMillis() - init);
+        System.out.println("COUNTER:" + counter.get());
+        parameters = new ParameterSupplier(spaceIntervals, intervals);
+        parameters.setConfiguration(1, 1);
+        getStrings2(stringBuilder, parameters, formulaPrinter, aGlobally, ass, globallycheck, counter);
+        System.out.println(System.currentTimeMillis() - init);
+        System.out.println("COUNTER:" + counter.get());
+//        ParameterSupplier parameters = new ParameterSupplier(spaceIntervals, intervals);
+//        parameters.setConfiguration(1, 2);
+//        parameters.length();
+//        getStrings(stringBuilder, parameters, formulaPrinter, aGloballyFinally, ass2, globallyFinallycheck, counter);
+//        System.out.println(System.currentTimeMillis() - init);
+//        System.out.println("COUNTER:" + counter.get());
+//        parameters = new ParameterSupplier(spaceIntervals, intervals);
+//        parameters.setConfiguration(1, 2);
+//        getStrings(stringBuilder, parameters, formulaPrinter, aFinallyGlobally, ass2, finallyGloballycheck, counter);
+//        System.out.println(System.currentTimeMillis() - init);
+//        System.out.println("COUNTER:" + counter.get());
+        Path path = Paths.get(outputLocation);
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            writer.write(stringBuilder.toString());
+        }
+    }
+
 
     private static List<double[]> getParameters(List<double[]> spaceIntervals, List<double[]> intervals) {
         List<double[]> params = new ArrayList<>();
@@ -146,9 +224,35 @@ public class AllFormulas2 {
         return b && c;
     }
 
-    private static void getStrings(StringBuilder stringBuilder, ParameterSupplier parameters, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<double[]>[] eval, AtomicInteger counter) {
+    private static boolean check(Predicate<Assignment>[] eval, Assignment assignment) {
+        boolean b = Arrays.stream(eval).parallel().anyMatch(s -> s.test(assignment));
+        boolean c = Arrays.stream(eval).parallel().anyMatch(s -> !s.test(assignment));
+        return b && c;
+    }
+
+
+    private static boolean check(Formula formula, Predicate<double[]>[] eval, double[] param) {
+        boolean b = Arrays.stream(eval).parallel().anyMatch(s -> s.test(param));
+        boolean c = Arrays.stream(eval).parallel().anyMatch(s -> !s.test(param));
+        return b && c;
+    }
+
+
+    private static void getStrings(StringBuilder stringBuilder, ParameterSupplier parameters, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> ass, Predicate<Assignment>[] eval, AtomicInteger counter) {
         Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(ass.apply(value));
-        Stream.generate(parameters).limit(parameters.length()).filter(s -> check(eval, s)).peek(s -> counter.incrementAndGet()).forEach(s -> stringBuilder.append(printer.apply(s)).append("\n"));
+        Stream.generate(parameters).limit(parameters.length()).filter(s -> check(eval, ass.apply(s))).peek(s -> counter.incrementAndGet()).forEach(s -> stringBuilder.append(printer.apply(s)).append("\n"));
+    }
+
+    private static void getStrings2(StringBuilder stringBuilder, ParameterSupplier parameters, FormulaPrinter formulaPrinter, Formula formula, Function<double[], Assignment> toAssignment, Predicate<Assignment>[] eval, AtomicInteger counter) {
+        Function<double[], String> printer = value -> formula.accept(formulaPrinter).evaluate(toAssignment.apply(value));
+        Storage storage = new Storage();
+        Stream.generate(parameters).limit(parameters.length()).filter(s -> check(formula, toAssignment, s, eval, storage)).peek(s -> counter.incrementAndGet()).forEach(s -> stringBuilder.append(printer.apply(s)).append("\n"));
+    }
+
+    private static boolean check(Formula formula, Function<double[], Assignment> toAssignment, double[] parameters, Predicate<Assignment>[] eval, Storage storage) {
+        boolean b = Arrays.stream(eval).anyMatch(s -> storage.eval(formula, toAssignment, parameters, s));
+        boolean c = Arrays.stream(eval).anyMatch(s -> !storage.eval(formula, toAssignment, parameters, s));
+        return b && c;
     }
 
 
@@ -168,9 +272,12 @@ public class AllFormulas2 {
     }
 
 
-    public static Predicate<double[]> construct(Formula formula, BooleanTemporalMonitoring monitor, Function<
-            double[], Assignment> function) {
-        return value -> formula.accept(monitor).evaluate(function.apply(value));
+    private static Function<BooleanTemporalMonitoring, Predicate<Assignment>> construct(Formula formula) {
+        return monitor -> formula.accept(monitor)::evaluate;
+    }
+
+    public static Predicate<Assignment> construct2(Formula formula, BooleanTemporalMonitoring monitor) {
+        return value -> formula.accept(monitor).evaluate(value);
     }
 
     public static void getTrajectory(String inputLocationOfTrajectories, String outputLocation) throws

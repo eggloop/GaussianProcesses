@@ -10,12 +10,10 @@ import java.util.stream.IntStream;
 
 public class ParameterSupplier implements Supplier<double[]> {
 
-    List<double[]> time;
-    List<double[]> space;
-    int nTime;
-    int nSpace;
-    int[] state;
-    int[] maxState;
+    private List<double[]> time;
+    private List<double[]> space;
+    private int[] state;
+    private int[] maxState;
     private List<List<double[]>> values = new ArrayList<>();
 
 
@@ -25,8 +23,6 @@ public class ParameterSupplier implements Supplier<double[]> {
     }
 
     public void setConfiguration(int nTime, int nSpace) {
-        this.nTime = nTime;
-        this.nSpace = nSpace;
         this.state = new int[nTime + nSpace];
         int[] maxStateTime = IntStream.range(0, nTime).map(s -> this.time.size()).toArray();
         int[] maxStateSpace = IntStream.range(0, nSpace).map(s -> this.space.size()).toArray();
@@ -59,7 +55,7 @@ public class ParameterSupplier implements Supplier<double[]> {
 
     public synchronized long length() {
         System.out.println();
-        return Arrays.stream(maxState).mapToLong(s->s).reduce(1, (a, b) -> a * b)-1;
+        return Arrays.stream(maxState).mapToLong(s -> s).reduce(1, (a, b) -> a * b) - 1;
     }
 
 
@@ -74,6 +70,5 @@ public class ParameterSupplier implements Supplier<double[]> {
             result = ArrayUtils.addAll(result, elements.get(i));
         }
         return result;
-
     }
 }

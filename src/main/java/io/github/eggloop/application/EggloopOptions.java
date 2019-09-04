@@ -1,11 +1,9 @@
 package io.github.eggloop.application;
 
 public enum EggloopOptions {
-    HELP("-help", "show alla available options"),
-    TRAJECTORY_FILE_PATH("-trajectory", "path of the file storing the trajectory"),
-    FORMULAS("-formula", "<ALL> write all STL formula results, this is the unique parameter"),
-    OUTPUT_FILE_PATH("-output", "path of the file where store results");
-
+    HELP("-help", "show available options"),
+    FEATURE_SELECTION("-featureSelection", "<trajectories file path> <storage file name>"),
+    EVALUATION("-evaluation", "<storage file path> <trajectory file path>");
 
     private String key;
     private String value;
@@ -14,7 +12,6 @@ public enum EggloopOptions {
         this.key = key;
         this.value = value;
     }
-
 
     public boolean is(String value) {
         return key.equals(value);

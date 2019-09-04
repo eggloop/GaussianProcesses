@@ -68,7 +68,7 @@ class SubtractionTest {
     @Test
     void testLogicalImplicationPartialVariableAssignment() {
         ArithmeticExpression left = new Variable("X");
-        ArithmeticExpression right = new Variable("X");
+        ArithmeticExpression right = new Variable("Y");
         ArithmeticExpression subtraction = new Subtraction(left,right);
         Assignment originalAssignment = new Assignment();
         originalAssignment.put("X", 2);
@@ -83,7 +83,7 @@ class SubtractionTest {
         Predicate<Assignment> predicate = subtraction.logicalImplication().evaluate(originalAssignment);
 
         assertFalse(predicate.test(originalAssignment));
-        //assertTrue(predicate.test(trueAssignment));
+        assertTrue(predicate.test(trueAssignment));
         assertFalse(predicate.test(falseAssignment));
     }
 }
