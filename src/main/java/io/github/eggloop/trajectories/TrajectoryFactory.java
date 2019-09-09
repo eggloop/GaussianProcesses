@@ -50,6 +50,14 @@ public class TrajectoryFactory {
         return trajectories;
     }
 
+    public static double[] fromJSONRewards(String jsonEntry) throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject root = (JSONObject) parser.parse(jsonEntry);
+        JSONArray rewards = (JSONArray) (root.get("rewards"));
+        return toDoubles(rewards);
+    }
+
+
     private static JSONArray toJSON(double[] value) {
         JSONArray array = new JSONArray();
         for (double element : value) {

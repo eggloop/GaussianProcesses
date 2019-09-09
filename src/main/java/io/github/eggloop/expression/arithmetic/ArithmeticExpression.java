@@ -2,9 +2,10 @@ package io.github.eggloop.expression.arithmetic;
 
 import io.github.eggloop.expression.relational.DomainFunction;
 
+import java.io.Serializable;
 import java.util.function.Predicate;
 
-public interface ArithmeticExpression {
+public interface ArithmeticExpression extends Serializable {
 
     <T> DomainFunction<T> accept(ArithmeticExpressionVisitor<T> visitor);
 

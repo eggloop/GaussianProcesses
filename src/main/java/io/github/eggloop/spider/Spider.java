@@ -4,6 +4,7 @@ import io.github.eggloop.expression.arithmetic.Assignment;
 import io.github.eggloop.expression.arithmetic.Variable;
 import io.github.eggloop.expression.relational.GreaterEqualTo;
 import io.github.eggloop.expression.relational.LowerEqualTo;
+import io.github.eggloop.spider.gradient.WeightCalculator;
 import io.github.eggloop.stl.syntax.*;
 import io.github.eggloop.stl.visitor.BooleanTemporalMonitoring;
 import io.github.eggloop.trajectories.Trajectory;
@@ -12,6 +13,9 @@ import io.github.eggloop.utils.FileUtils;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -71,6 +75,7 @@ public class Spider {
         System.out.println("END (time:" + endTimeSec + " sec)");
     }
 
+
     public static void evaluateSingleTrajectory(String beanFilePath) throws IOException, ClassNotFoundException, ParseException {
         try (ObjectInputStream iis = new ObjectInputStream(new FileInputStream(beanFilePath))) {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -78,7 +83,8 @@ public class Spider {
             while (true) {
                 String inputLocationOfTrajectory = stdIn.readLine();
                 if (inputLocationOfTrajectory != null && !"EXIT".equals(inputLocationOfTrajectory)) {
-                    String jsonTrajectories = FileUtils.readFileToString(inputLocationOfTrajectory);
+                    //String jsonTrajectories = FileUtils.readFileToString(inputLocationOfTrajectory);
+                    String jsonTrajectories = inputLocationOfTrajectory;
                     Trajectory trajectory = TrajectoryFactory.fromJSON(jsonTrajectories);
                     Formula atoml = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
                     Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
@@ -98,12 +104,30 @@ public class Spider {
                     Predicate<double[]> finallyCheck = construct(aFinally, booleanTemporalMonitoring, ass);
                     Predicate<double[]> globallyCheck = construct(aGlobally, booleanTemporalMonitoring, ass);
                     bean.getEventually().forEach(s -> System.out.print(finallyCheck.test(s) ? "1 " : "0 "));
-                    bean.getEventually().forEach(s -> System.out.print(globallyCheck.test(s) ? "1 " : "0 "));
+                    bean.getGlobally().forEach(s -> System.out.print(globallyCheck.test(s) ? "1 " : "0 "));
                     System.out.println("\n");
                 }
                 if ("EXIT".equals(inputLocationOfTrajectory)) {
                     return;
                 }
+            }
+        }
+    }
+
+
+    public static void evaluateGradient(String beanFilePath, String trajectoryFilePath, String rewardsFilePath, String outputFilePath, double alpha, double lambda) throws IOException, ClassNotFoundException, ParseException {
+        try (ObjectInputStream iis = new ObjectInputStream(new FileInputStream(beanFilePath))) {
+            Bean bean = (Bean) iis.readObject();
+            String jsonTrajectories = FileUtils.readFileToString(trajectoryFilePath);
+            String jsonRewards = FileUtils.readFileToString(rewardsFilePath);
+            Trajectory[] trajectories = TrajectoryFactory.fromJSONMultiple(jsonTrajectories);
+            double[] rewards = TrajectoryFactory.fromJSONRewards(jsonRewards);
+            Arrays.fill(rewards, 1);
+            WeightCalculator weightCalculator = new WeightCalculator(bean, alpha, lambda);
+            double[] weight = weightCalculator.updateAll(rewards, trajectories);
+            Path path = Paths.get(outputFilePath);
+            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+                writer.write(Arrays.toString(weight));
             }
         }
     }
@@ -120,7 +144,7 @@ public class Spider {
     }
 
     private static Predicate<double[]> construct(Formula formula, BooleanTemporalMonitoring monitor, Function<
-            double[], Assignment> function) {
-        return value -> formula.accept(monitor).evaluate(function.apply(value));
+            double[], Assignment> assignment) {
+        return value -> formula.accept(monitor).evaluate(assignment.apply(value));
     }
 }
