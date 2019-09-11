@@ -10,6 +10,7 @@ import io.github.eggloop.stl.visitor.BooleanTemporalMonitoring;
 import io.github.eggloop.trajectories.Trajectory;
 import me.tongfei.progressbar.ProgressBar;
 
+import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -27,7 +28,10 @@ public class WeightCalculator {
     }
 
     public double[] updateAll(double[] rewards, Trajectory[] trajectories) {
-        double[] weights = new double[bean.getEventually().size() + bean.getGlobally().size()];
+        Random random = new Random(1);
+        int totalFormulae = bean.getEventually().size() + bean.getGlobally().size();
+        double std = 1.0 / totalFormulae;
+        double[] weights = IntStream.range(0, totalFormulae).mapToDouble(s -> std * random.nextGaussian()).toArray();
         Formula atoml = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
         Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
         Formula aFinally = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
