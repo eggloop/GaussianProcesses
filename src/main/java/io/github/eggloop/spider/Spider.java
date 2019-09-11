@@ -33,12 +33,12 @@ public class Spider {
         //utility class
     }
 
-    public static void getTrajectories(String inputLocationOfTrajectories, String outputLocation) throws IOException, ParseException {
+    public static void getTrajectories(String inputLocationOfTrajectories, String outputLocation, int lower, int upper) throws IOException, ParseException {
         String jsonTrajectories = FileUtils.readFileToString(inputLocationOfTrajectories);
         Trajectory[] trajectories = TrajectoryFactory.fromJSONMultiple(jsonTrajectories);
         double[] times = trajectories[0].getTimes();
         List<double[]> intervals = generateIntervals(times);
-        double[] space = IntStream.range(-8, 18).mapToDouble(s -> 0.1 * s).toArray();
+        double[] space = IntStream.range(lower, upper).mapToDouble(s -> 0.1 * s).toArray();
         List<double[]> spaceIntervals = generateIntervals(space);
         BooleanTemporalMonitoring[] booleanTemporalMonitoring = Arrays.stream(trajectories).map(BooleanTemporalMonitoring::new).toArray(BooleanTemporalMonitoring[]::new);
         // FormulaPrinter formulaPrinter = new FormulaPrinter(new LogicOperatorToken());

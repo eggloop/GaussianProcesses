@@ -16,7 +16,7 @@ public class Eggloop {
         if (EggloopOptions.HELP.is(args[0])) {
             ConsoleWriter.info(EggloopOptions.printAll());
         } else if (EggloopOptions.FEATURE_SELECTION.is(args[0])) {
-            Spider.getTrajectories(args[1], args[2]);
+            Spider.getTrajectories(args[1], args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
         } else if (EggloopOptions.EVALUATION.is(args[0])) {
             Spider.evaluateGradient(args[1], args[2], args[3], args[4], Double.parseDouble(args[5]), Double.parseDouble(args[6]));
         } else {
