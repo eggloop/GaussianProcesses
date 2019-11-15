@@ -15,5 +15,6 @@ build/
 .idea/modules
 .idea/shelf
 .idea/sonarlint
-.idea/*.*
+.idea/*
 .ipynb_checkpoints
+debug

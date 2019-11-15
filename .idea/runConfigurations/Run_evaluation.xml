@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Evaluations" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/eggloop.jar" />
+    <option name="PROGRAM_PARAMETERS" value="-evaluation $PROJECT_DIR$/debug/parameters.storage $PROJECT_DIR$/debug/windvel_start3.json $PROJECT_DIR$/debug/newrewards500.json $PROJECT_DIR$/debug/weight.output 0.1 1"  />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2" />
+  </configuration>
+</component>

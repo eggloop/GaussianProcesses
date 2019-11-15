@@ -32,10 +32,15 @@ public class WeightCalculator {
         int totalFormulae = bean.getEventually().size() + bean.getGlobally().size();
         double std = 1.0 / totalFormulae;
         double[] weights = IntStream.range(0, totalFormulae).mapToDouble(s -> std * random.nextGaussian()).toArray();
-        Formula atoml = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
-        Formula atomh = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l")));
-        Formula aFinally = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
-        Formula aGlobally = new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atoml, atomh));
+        //X>=h
+        Formula atomh = new Atom(new GreaterEqualTo(new Variable("X"), new Variable("h")));
+        //X<=l
+        Formula atoml = new Atom(new LowerEqualTo(new Variable("X"), new Variable("l"))); //X<=l
+        //F[a,b] (X>=h and X<=l)
+        Formula aFinally = new Finally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atomh, atoml));
+        //G[a,b] (X>=h and X<=l)
+        Formula aGlobally = new Globally(new Interval(new Variable("a"), new Variable("b")), new Conjunction(atomh, atoml));
+
         Function<double[], Assignment> ass = value -> {
             Assignment assignment = new Assignment();
             assignment.put("h", value[0]);
@@ -61,25 +66,22 @@ public class WeightCalculator {
     }
 
 
-    private double scalarProduct(boolean[] features, double[] oldWeights) {
+    private static double scalarProduct(boolean[] features, double[] oldWeights) {
         return IntStream.range(0, features.length).mapToDouble(index -> features[index] ? oldWeights[index] : 0.0).reduce(0.0, Double::sum);
     }
 
-    private double weightUpdate(double update, double oldWeight, double alpha, double lambda) {
-        if (oldWeight != 0) {
+    private static double weightUpdate(double update, double oldWeight, double alpha, double lambda) {
             //double update = feature ? alpha * (r - scalarProduct) : 0;
             double weight = oldWeight + update;
             if (weight > 0) {
-                weight = Math.max(0, weight - alpha * lambda);
+                weight = weight - alpha * lambda;
             } else if (weight < 0) {
-                weight = Math.min(0, weight + alpha * lambda);
+                weight = weight + alpha * lambda;
             }
             return weight;
-        }
-        return 0;
     }
 
-    private double[] weightsUpdate(double[] oldWeights, boolean[] features, double alpha, double lambda, double r) {
+    public static double[] weightsUpdate(double[] oldWeights, boolean[] features, double alpha, double lambda, double r) {
         double scalarProduct = scalarProduct(features, oldWeights);
         double update = alpha * (r - scalarProduct);
         double[] weights = new double[oldWeights.length];
