@@ -19,8 +19,12 @@ public class Eggloop {
             Spider.getTrajectories(args[1], args[2], Integer.parseInt(args[3]), Integer.parseInt(args[4]));
         } else if (EggloopOptions.EVALUATION.is(args[0])) {
             Spider.evaluateGradient(args[1], args[2], args[3], args[4], Double.parseDouble(args[5]), Double.parseDouble(args[6]));
+        } else if (EggloopOptions.PREDICTION.is(args[0])) {
+            Spider.prediction(args[1], args[2], args[3], args[4]);
+
         } else {
             throw new IllegalArgumentException("Unsupported Operation");
         }
     }
+
 }

@@ -3,7 +3,8 @@ package io.github.eggloop.application;
 public enum EggloopOptions {
     HELP("-help", "show available options"),
     FEATURE_SELECTION("-featureSelection", "<trajectories file path> <storage file name>"),
-    EVALUATION("-evaluation", "<storage file path> <trajectory file path>");
+    EVALUATION("-evaluation", "<storage file path> <trajectory file path>"),
+    PREDICTION("-prediction", "<storage file path> <weight file path> <trajectories input path> <prediction output path> ");
 
     private String key;
     private String value;

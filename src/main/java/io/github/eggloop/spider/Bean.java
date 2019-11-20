@@ -19,4 +19,8 @@ public class Bean implements Serializable {
     public List<double[]> getGlobally() {
         return globally;
     }
+
+    public int size(){
+        return eventually.size()+globally.size();
+    }
 }

@@ -51,9 +51,17 @@ public class TrajectoryFactory {
     }
 
     public static double[] fromJSONRewards(String jsonEntry) throws ParseException {
+        return fromJSONTag(jsonEntry,"rewards");
+    }
+
+    public static double[] fromJSONWeights(String jsonEntry) throws ParseException {
+        return fromJSONTag(jsonEntry,"weights");
+    }
+
+    private static double[] fromJSONTag(String jsonEntry, String tag) throws ParseException {
         JSONParser parser = new JSONParser();
         JSONObject root = (JSONObject) parser.parse(jsonEntry);
-        JSONArray rewards = (JSONArray) (root.get("rewards"));
+        JSONArray rewards = (JSONArray) (root.get(tag));
         return toDoubles(rewards);
     }
 

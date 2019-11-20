@@ -148,4 +148,36 @@ public class Spider {
             double[], Assignment> assignment) {
         return value -> formula.accept(monitor).evaluate(assignment.apply(value));
     }
+
+    public static void prediction(String beanFilePath, String weightFilePath, String trajectoryFilePath, String predictionOutputFilePath) throws IOException, ClassNotFoundException, ParseException {
+        try (ObjectInputStream iis = new ObjectInputStream(new FileInputStream(beanFilePath))) {
+            Bean bean = (Bean) iis.readObject();
+            String weightFile = FileUtils.readFileToString(weightFilePath);
+            double[] weights = TrajectoryFactory.fromJSONRewards(weightFile);
+            String jsonTrajectories = FileUtils.readFileToString(trajectoryFilePath);
+            Trajectory[] trajectories = TrajectoryFactory.fromJSONMultiple(jsonTrajectories);
+            int[] prediction = new int[trajectories.length];
+
+            Function<BooleanTemporalMonitoring, Predicate<double[]>> checkFinally = Evaluator.checkFinally();
+            Function<BooleanTemporalMonitoring, Predicate<double[]>> checkGlobally = Evaluator.checkGlobally();
+
+            for (int i = 0; i < prediction.length; i++) {
+                BooleanTemporalMonitoring booleanTemporalMonitoring = new BooleanTemporalMonitoring(trajectories[i]);
+                Predicate<double[]> finallyCheck = checkFinally.apply(booleanTemporalMonitoring);
+                Predicate<double[]> globallyCheck = checkGlobally.apply(booleanTemporalMonitoring);
+                boolean[] eval = Evaluator.eval(bean, finallyCheck, globallyCheck);
+                double scalarProduct = 0;
+                for (int j = 0; j < eval.length; j++) {
+                    if (eval[j]) {
+                        scalarProduct += weights[j];
+                    }
+                }
+                prediction[i] = scalarProduct > 0 ? 1 : 0;
+            }
+            Path path = Paths.get(predictionOutputFilePath);
+            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+                writer.write(Arrays.toString(prediction));
+            }
+        }
+    }
 }
