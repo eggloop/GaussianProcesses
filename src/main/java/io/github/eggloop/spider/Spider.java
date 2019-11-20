@@ -118,13 +118,13 @@ public class Spider {
     public static void evaluateGradient(String beanFilePath, String trajectoryFilePath, String rewardsFilePath, String outputFilePath, double alpha, double lambda) throws IOException, ClassNotFoundException, ParseException {
         try (ObjectInputStream iis = new ObjectInputStream(new FileInputStream(beanFilePath))) {
             Bean bean = (Bean) iis.readObject();
-            Bean fake = new Bean(bean.getEventually().subList(0,20),bean.getGlobally().subList(0,20));
+            //Bean fake = new Bean(bean.getEventually().subList(0,20),bean.getGlobally().subList(0,20));
             String jsonTrajectories = FileUtils.readFileToString(trajectoryFilePath);
             String jsonRewards = FileUtils.readFileToString(rewardsFilePath);
             Trajectory[] trajectories = TrajectoryFactory.fromJSONMultiple(jsonTrajectories);
             double[] rewards = TrajectoryFactory.fromJSONRewards(jsonRewards);
            // Arrays.fill(rewards, 1);
-            WeightCalculator weightCalculator = new WeightCalculator(fake, alpha, lambda);
+            WeightCalculator weightCalculator = new WeightCalculator(bean, alpha, lambda);
             double[] weight = weightCalculator.updateAll(rewards, trajectories);
             Path path = Paths.get(outputFilePath);
             try (BufferedWriter writer = Files.newBufferedWriter(path)) {
